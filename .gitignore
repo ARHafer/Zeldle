@@ -1,0 +1,20 @@
+## Backend ##
+backend/.env
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+frontend/*.log
+backend/.idea
+backend/*.iws
+backend/*.iml
+backend/*.ipr
+
+## Frontend ##
+frontend/.env
+frontend/node_modules
+frontend/dist
+frontend/dist-ssr
+frontend/*.local
+frontend/logs
+frontend/*.log
+frontend/npm-debug.log*
+frontend/.vscode/*
