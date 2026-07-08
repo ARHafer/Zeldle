@@ -1,17 +1,9 @@
-import { useEffect, useState } from 'react';
-import { getStatus } from './api/statusApi';
+import GamePage from './pages/GamePage';
 import './App.css';
 
 function App() {
 
-  const [status, setStatus] = useState(false);
-  const statusString = status ? "Online" : "Offline";
-
-  useEffect(() => {
-    getStatus().then(setStatus);
-  }, [])
-
-  return <h1>Backend Status: {statusString}</h1>
+  return <GamePage/>
 }
 
 export default App
