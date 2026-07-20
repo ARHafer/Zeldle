@@ -21,5 +21,4 @@ public class GuessController {
     public FeedbackResponse submitGuess(@RequestBody GuessRequest guess) {
         return guessService.submitGuess(guess);
     }
-
 }

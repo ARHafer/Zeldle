@@ -1,6 +1,7 @@
 import type { Item } from '../types/Item';
+import ItemListCell from './ItemListCell';
 
-export default function ItemList(props: { items: Item[] }) {
+export default function ItemList(props: { items: Item[]; guessedIds: Set<number>; isLoading: boolean; onCellClick: (itemId: number) => void } ) {
 
     if (props.items.length == 0) {
         return (
@@ -17,7 +18,7 @@ export default function ItemList(props: { items: Item[] }) {
 
             <ul>
                 {props.items.map(item => (
-                    <li key={item.id}>{item.name}</li>
+                    <li key={item.id}><ItemListCell item={item} guessedIds={props.guessedIds} isLoading={props.isLoading} onCellClick={props.onCellClick}/></li>
                 ))}
             </ul>
         </div>

@@ -1,24 +1,31 @@
 import { useEffect, useState } from 'react';
 import { getItems } from '../api/itemApi';
-import { getStatus } from '../api/statusApi';
 import type { Item } from '../types/Item';
 import ItemList from '../components/ItemList';
+import useGuess from '../hooks/useGuess'
 
 function GamePage() {
 
   const [items, setItems] = useState<Item[]>([]);
-  const [status, setStatus] = useState(false);
-  const statusString = status ? "Online" : "Offline";
+  const { guess, result, isLoading, error } = useGuess();
+  const [guessedIds, setGuessedIds] = useState<Set<number>>(new Set()); // Previously chosen items gray out and becoming unchooseable.
+
+
+  function handleCellClick(itemId: number) {
+    if (guessedIds.has(itemId)) {
+      return;
+    }
+
+    guess(itemId);
+    setGuessedIds(new Set([...guessedIds, itemId]));
+  }
 
   useEffect(() => {
     getItems().then(setItems);
-    getStatus().then(setStatus);
   }, [])
 
   return (
-  <><h1>Backend Status: {statusString}</h1> 
-  <br/> 
-  <ItemList items={items}/></>
+  <ItemList items={items} guessedIds={guessedIds} isLoading={isLoading} onCellClick={handleCellClick}/>
   )
 }
 

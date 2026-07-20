@@ -11,4 +11,3 @@ public record FeedbackResponse(boolean correct,
                                Result range,
                                Result enemyInteraction,
                                Result controlMode) {}
-
