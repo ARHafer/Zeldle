@@ -1,6 +1,6 @@
-type Result = 'CORRECT' | 'INCORRECT' | 'HIGHER' | 'LOWER' | 'EQUAL'
+export type Result = 'CORRECT' | 'INCORRECT' | 'HIGHER' | 'LOWER' | 'EQUAL'
 
-export interface FeedbackResponse {
+export interface Feedback {
 
     correct: boolean;
     name: Result;

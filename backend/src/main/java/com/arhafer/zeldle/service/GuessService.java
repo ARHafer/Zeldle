@@ -1,6 +1,7 @@
 package com.arhafer.zeldle.service;
 
 import com.arhafer.zeldle.dto.GuessRequest;
+import com.arhafer.zeldle.dto.ItemPropertyResponse;
 import com.arhafer.zeldle.entity.Item;
 import com.arhafer.zeldle.dto.FeedbackResponse;
 import com.arhafer.zeldle.constant.Result;
@@ -54,5 +55,19 @@ public class GuessService {
         } else {
             return Result.HIGHER;
         }
+    }
+
+    public ItemPropertyResponse getItemProperties(int id) {
+        Item item = itemRepo.findById(id).orElseThrow();
+
+        return new ItemPropertyResponse(
+                item.getName(),
+                item.getGame().getFullName(),
+                item.getPurpose(),
+                item.getConsumption(),
+                item.getAcquisition(),
+                item.getRange(),
+                item.getEnemyInteraction(),
+                item.getControlMode());
     }
 }

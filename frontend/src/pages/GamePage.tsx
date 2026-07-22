@@ -1,23 +1,29 @@
 import { useEffect, useState } from 'react';
 import { getItems } from '../api/itemApi';
 import type { Item } from '../types/Item';
-import ItemList from '../components/ItemList';
+import ItemList from '../components/ItemList/ItemList';
 import useGuess from '../hooks/useGuess'
+import FeedbackGrid from '../components/FeedbackGrid/FeedbackGrid';
+import type { GuessData } from '../types/GuessData';
 
 function GamePage() {
 
   const [items, setItems] = useState<Item[]>([]);
-  const { guess, result, isLoading, error } = useGuess();
+  const { guess, isLoading, error } = useGuess();
   const [guessedIds, setGuessedIds] = useState<Set<number>>(new Set()); // Previously chosen items gray out and becoming unchooseable.
+  const [guessHistory, setGuessHistory] = useState<GuessData[]>([])
 
-
-  function handleCellClick(itemId: number) {
+  async function handleCellClick(itemId: number) {
     if (guessedIds.has(itemId)) {
       return;
     }
 
-    guess(itemId);
-    setGuessedIds(new Set([...guessedIds, itemId]));
+    const guessData = await guess(itemId)
+ 
+    if (guessData != null) {
+      setGuessedIds(new Set([...guessedIds, itemId]));
+      setGuessHistory([...guessHistory, guessData])
+    }
   }
 
   useEffect(() => {
@@ -25,7 +31,8 @@ function GamePage() {
   }, [])
 
   return (
-  <ItemList items={items} guessedIds={guessedIds} isLoading={isLoading} onCellClick={handleCellClick}/>
+  <><ItemList items={items} guessedIds={guessedIds} isLoading={isLoading} onCellClick={handleCellClick} />
+  <FeedbackGrid guessHistory={guessHistory}/></>
   )
 }
 

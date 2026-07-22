@@ -1,4 +1,4 @@
-import type { Item } from '../types/Item';
+import type { Item } from '../../types/Item';
 import ItemListCell from './ItemListCell';
 
 export default function ItemList(props: { items: Item[]; guessedIds: Set<number>; isLoading: boolean; onCellClick: (itemId: number) => void } ) {
