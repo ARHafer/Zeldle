@@ -1,6 +1,5 @@
 package com.arhafer.zeldle.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -25,11 +24,7 @@ public class Item {
     public Consumption getConsumption() { return consumption; }
     public Acquisition getAcquisition() { return acquisition; }
     public Range getRange() { return range; }
-
-    @JsonProperty("enemy_interaction")
     public EnemyInteraction getEnemyInteraction() { return enemyInteraction; }
-
-    @JsonProperty("control_mode")
     public ControlMode getControlMode() { return controlMode; }
 
     // Enums //
