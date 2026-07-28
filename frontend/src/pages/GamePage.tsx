@@ -4,14 +4,13 @@ import type { Item } from '../types/Item';
 import ItemList from '../components/ItemList/ItemList';
 import useGuess from '../hooks/useGuess'
 import FeedbackGrid from '../components/FeedbackGrid/FeedbackGrid';
-import type { GuessData } from '../types/GuessData';
+import useStorage from '../hooks/useStorage';
 
 function GamePage() {
 
   const [items, setItems] = useState<Item[]>([]);
-  const { guess, isLoading, error } = useGuess();
-  const [guessedIds, setGuessedIds] = useState<Set<number>>(new Set()); // Previously chosen items gray out and becoming unchooseable.
-  const [guessHistory, setGuessHistory] = useState<GuessData[]>([])
+  const { guess, isLoading } = useGuess();
+  const { storeGuess, guessedIds, guessHistory } = useStorage();
 
   async function handleCellClick(itemId: number) {
     if (guessedIds.has(itemId)) {
@@ -21,8 +20,7 @@ function GamePage() {
     const guessData = await guess(itemId)
  
     if (guessData != null) {
-      setGuessedIds(new Set([...guessedIds, itemId]));
-      setGuessHistory([...guessHistory, guessData])
+      storeGuess(itemId, guessData);
     }
   }
 
