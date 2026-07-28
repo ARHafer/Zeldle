@@ -37,7 +37,7 @@ public class GameServiceTest {
         Game existingGame = new Game(date, 1);
         when(gameRepo.findById(date)).thenReturn(Optional.of(existingGame));
 
-        GameResponse response = gameService.getOrCreateCurrentGame();
+        GameResponse response = gameService.getOrCreateTodaysGame();
 
         assertEquals(date, response.gameDate());
         verify(itemRepo, never()).getRandomId();
@@ -49,7 +49,7 @@ public class GameServiceTest {
         when(gameRepo.findById(date)).thenReturn(Optional.empty());
         when(itemRepo.getRandomId()).thenReturn(1);
 
-        GameResponse response = gameService.getOrCreateCurrentGame();
+        GameResponse response = gameService.getOrCreateTodaysGame();
 
         verify(itemRepo).getRandomId();
         verify(gameRepo).insert(date, 1);
@@ -67,7 +67,7 @@ public class GameServiceTest {
         when(itemRepo.getRandomId()).thenReturn(1);
         doThrow(new DuplicateKeyException("")).when(gameRepo).insert(date, 1);
 
-        GameResponse response = gameService.getOrCreateCurrentGame();
+        GameResponse response = gameService.getOrCreateTodaysGame();
 
         assertEquals(date, response.gameDate());
         verify(gameRepo, times(2)).findById(date);

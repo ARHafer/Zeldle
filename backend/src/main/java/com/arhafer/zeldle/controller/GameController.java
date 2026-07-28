@@ -15,7 +15,7 @@ public class GameController {
     }
 
     @GetMapping("/game")
-    public GameResponse game() {
-        return gameService.getOrCreateCurrentGame();
+    public GameResponse getTodaysGame() {
+        return gameService.getOrCreateTodaysGame();
     }
 }

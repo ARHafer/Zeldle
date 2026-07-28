@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Optional;
 
 @Service
 public class GameService {
@@ -23,22 +22,28 @@ public class GameService {
         this.itemRepo = itemRepo;
     }
 
-    // Game creation can also happen on page load in case the server was down at midnight or something.
-    public GameResponse getOrCreateCurrentGame() {
-        LocalDate today = getToday();
-        Optional<Game> currentGame = gameRepo.findById(today);
-
-        if (currentGame.isPresent()) {
-            return new GameResponse(currentGame.get().getGameDate());
-        } else {
-            Game newGame = createNewGame(today);
-            return new GameResponse(newGame.getGameDate());
-        }
-    }
-
     @Scheduled(cron = "0 0 0 * * *", zone = "America/New_York")
     public void scheduledGameCreation() {
-        getOrCreateCurrentGame();
+        getOrCreateTodaysGame();
+    }
+
+    // Game creation can also happen on page load in case the server was down at midnight or something.
+    public GameResponse getOrCreateTodaysGame() {
+        return new GameResponse(getTodaysGame().getGameDate());
+    }
+
+    // Used only in GuessService, hence the package-private.
+    int getTodaysTargetItemId() {
+        return getTodaysGame().getTargetItemId();
+    }
+
+    private Game getTodaysGame() {
+        LocalDate today = getToday();
+        return getOrCreateGame(today);
+    }
+
+    private Game getOrCreateGame(LocalDate today) {
+        return gameRepo.findById(today).orElseGet(() -> createNewGame(today));
     }
 
     private Game createNewGame(LocalDate date) {
@@ -47,7 +52,7 @@ public class GameService {
         try {
             gameRepo.insert(date, targetItemId);
             return new Game(date, targetItemId);
-        } catch (DuplicateKeyException e) { // In case two clients open the page at the same time when the game yet hasn't been created.
+        } catch (DuplicateKeyException e) { // In case two clients open the page at the same time when the game hasn't yet been created.
             return gameRepo.findById(date).orElseThrow(IllegalStateException::new);
         }
     }

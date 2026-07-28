@@ -12,14 +12,16 @@ import org.springframework.stereotype.Service;
 public class GuessService {
 
     private final ItemRepository itemRepo;
+    private final GameService gameService;
 
-    public GuessService(ItemRepository itemRepo) {
+    public GuessService(ItemRepository itemRepo, GameService gameService) {
         this.itemRepo = itemRepo;
+        this.gameService = gameService;
     }
 
     public FeedbackResponse submitGuess(GuessRequest guess) {
         Item guessedItem = itemRepo.findById(guess.id()).orElseThrow();
-        Item targetItem = itemRepo.findById(1).orElseThrow(); // !!!PLACEHOLDER FOR TESTING!!!
+        Item targetItem = itemRepo.findById(gameService.getTodaysTargetItemId()).orElseThrow();
 
         return evaluateGuess(guessedItem, targetItem);
     }
