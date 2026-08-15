@@ -13,6 +13,6 @@ import java.time.LocalDate;
 public interface GameRepository extends CrudRepository<Game, LocalDate> {
 
     @Modifying
-    @Query(value = "INSERT INTO games (game_date, target_item_id) VALUES (:game_date, :target_item_id)")
-    void insert(@Param("game_date") LocalDate gameDate, @Param("target_item_id") int targetItemId);
+    @Query(value = "INSERT INTO games (date, target_item_id) VALUES (:date, :target_item_id)")
+    void insert(@Param("date") LocalDate date, @Param("target_item_id") int targetItemId);
 }

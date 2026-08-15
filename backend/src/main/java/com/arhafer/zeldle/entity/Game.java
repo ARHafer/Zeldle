@@ -9,14 +9,14 @@ import java.time.LocalDate;
 public class Game {
 
     @Id
-    private LocalDate gameDate;
-    private int targetItemId;
+    private final LocalDate date;
+    private final int targetItemId;
 
-    public Game(LocalDate gameDate, int targetItemId) {
-        this.gameDate = gameDate;
+    public Game(LocalDate date, int targetItemId) {
+        this.date = date;
         this.targetItemId = targetItemId;
     }
 
-    public LocalDate getGameDate() { return gameDate; }
+    public LocalDate getDate() { return date; }
     public int getTargetItemId() { return targetItemId; }
 }

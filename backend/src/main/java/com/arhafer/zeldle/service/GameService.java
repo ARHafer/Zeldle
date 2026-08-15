@@ -29,7 +29,7 @@ public class GameService {
 
     // Game creation can also happen on page load in case the server was down at midnight or something.
     public GameResponse getOrCreateTodaysGame() {
-        return new GameResponse(getTodaysGame().getGameDate());
+        return new GameResponse(getTodaysGame().getDate());
     }
 
     // Used only in GuessService, hence the package-private.
