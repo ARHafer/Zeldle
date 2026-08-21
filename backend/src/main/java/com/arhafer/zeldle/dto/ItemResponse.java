@@ -5,4 +5,4 @@ package com.arhafer.zeldle.dto;
  * That means you can't cheat with inspect element. >;)
  */
 
-public record ItemResponse(Integer id, String name) {}
+public record ItemResponse(int id, String name) {}

@@ -1,3 +1,5 @@
 package com.arhafer.zeldle.dto;
 
-public record GuessRequest(int id) {}
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record GuessRequest(@JsonProperty("item_id") int itemId) {}

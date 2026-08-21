@@ -42,7 +42,6 @@ public class PlayerIdFilter extends OncePerRequestFilter {
 
             } catch (IllegalArgumentException e) {
                 playerId = UUID.randomUUID();
-
                 playerIdCookie = createPlayerIdCookie(playerId);
             }
 

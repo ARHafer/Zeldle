@@ -7,7 +7,7 @@ import org.springframework.data.relational.core.mapping.Table;
 public class Item {
 
     @Id
-    private int id; // Changed to int because the ID is the primary key, so it will never be null.
+    private int id;
     private String name;
     private Game game;
     private Purpose purpose;
@@ -26,6 +26,16 @@ public class Item {
     public Range getRange() { return range; }
     public EnemyInteraction getEnemyInteraction() { return enemyInteraction; }
     public ControlMode getControlMode() { return controlMode; }
+
+    public void setId(int id) { this.id = id; }
+    public void setName(String name) { this.name = name; }
+    public void setGame(Game game) { this.game = game; }
+    public void setPurpose(Purpose purpose) { this.purpose = purpose; }
+    public void setConsumption(Consumption consumption) { this.consumption = consumption; }
+    public void setAcquisition(Acquisition acquisition) {  this.acquisition = acquisition; }
+    public void setRange(Range range) { this.range = range; }
+    public void setEnemyInteraction(EnemyInteraction enemyInteraction) { this.enemyInteraction = enemyInteraction; }
+    public void setControlMode(ControlMode controlMode) { this.controlMode = controlMode; }
 
     // Enums //
     public enum Game {
