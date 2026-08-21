@@ -97,7 +97,7 @@ public class GuessService {
     private void validateAndStoreGuess(GuessRequest guess, UUID playerId, LocalDate today, int numOfGuesses, int targetItemId) throws Exception {
         boolean itemAlreadyGuessed = guessRepo.wasItemGuessedThisGame(playerId, today, guess.itemId());
         boolean gameWon = guessRepo.wasItemGuessedThisGame(playerId, today, targetItemId);
-        boolean gameLost = numOfGuesses < MAX_GUESSES;
+        boolean gameLost = numOfGuesses >= MAX_GUESSES;
 
         if (!itemAlreadyGuessed && !gameWon && !gameLost) {
             guessRepo.insert(playerId, today, guess.itemId());
