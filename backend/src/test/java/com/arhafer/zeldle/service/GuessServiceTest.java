@@ -4,6 +4,8 @@ import com.arhafer.zeldle.constant.GameStatus;
 import com.arhafer.zeldle.dto.GuessRequest;
 import com.arhafer.zeldle.dto.GuessResponse;
 import com.arhafer.zeldle.entity.Item;
+import com.arhafer.zeldle.exception.GameOverException;
+import com.arhafer.zeldle.exception.DuplicateGuessException;
 import com.arhafer.zeldle.repository.GuessRepository;
 import com.arhafer.zeldle.repository.ItemRepository;
 import org.junit.jupiter.api.Test;
@@ -51,7 +53,7 @@ public class GuessServiceTest {
 
     // If a guess is valid, it should be inserted into the database, and the game status should equal IN_PROGRESS.
     @Test
-    void validGuess_GameInProgress() throws Exception {
+    void validGuess_GameInProgress() {
         GuessRequest guess = new GuessRequest(1);
         when(guessRepo.getNumOfGuessesThisGame(any(), any())).thenReturn(0);
         when(gameService.getTodaysTargetItemId()).thenReturn(2);
@@ -69,7 +71,7 @@ public class GuessServiceTest {
 
     // If the guess is correct, the game status should equal WON.
     @Test
-    void validGuess_GameWon() throws Exception {
+    void validGuess_GameWon() {
         GuessRequest guess = new GuessRequest(1);
         when(guessRepo.getNumOfGuessesThisGame(any(), any())).thenReturn(0);
         when(gameService.getTodaysTargetItemId()).thenReturn(1);
@@ -85,7 +87,7 @@ public class GuessServiceTest {
 
     // If the final guess was incorrect, the game status should equal LOST.
     @Test
-    void validGuess_GameLost() throws Exception {
+    void validGuess_GameLost() {
         GuessRequest guess = new GuessRequest(1);
         when(guessRepo.getNumOfGuessesThisGame(any(), any())).thenReturn(5);
         when(gameService.getTodaysTargetItemId()).thenReturn(2);
@@ -106,35 +108,38 @@ public class GuessServiceTest {
     @Test
     void invalidGuess_DuplicateGuess() {
         GuessRequest guess = new GuessRequest(1);
+        when(itemRepo.findById(1)).thenReturn(Optional.of(createItem(1)));
         when(guessRepo.getNumOfGuessesThisGame(any(), any())).thenReturn(1);
         when(guessRepo.wasItemGuessedThisGame(any(), any(), eq(1))).thenReturn(true);
         when(gameService.getTodaysTargetItemId()).thenReturn(2);
 
         verify(guessRepo, never()).insert(any(), any(), anyInt());
-        assertThrows(Exception.class, () -> guessService.submitGuess(guess, playerId));
+        assertThrows(DuplicateGuessException.class, () -> guessService.submitGuess(guess, playerId));
     }
 
     // If the correct item was previously guessed, an error should be thrown.
     @Test
     void invalidGuess_GameWon() {
         GuessRequest guess = new GuessRequest(1);
+        lenient().when(itemRepo.findById(1)).thenReturn(Optional.of(createItem(1)));
+        // I hate Mockito. Strict stubbing? Really? Because calling a function multiple times is unheard of, apparently.
         when(guessRepo.getNumOfGuessesThisGame(any(), any())).thenReturn(1);
         when(gameService.getTodaysTargetItemId()).thenReturn(2);
-        when(guessRepo.wasItemGuessedThisGame(any(), any(), eq(2))).thenReturn(true);
+        lenient().when(guessRepo.wasItemGuessedThisGame(any(), any(), eq(2))).thenReturn(true);
 
         verify(guessRepo, never()).insert(any(), any(), anyInt());
-        assertThrows(Exception.class, () -> guessService.submitGuess(guess, playerId));
+        assertThrows(GameOverException.class, () -> guessService.submitGuess(guess, playerId));
     }
 
     // If all 6 guesses were previously used, an error should be thrown.
     @Test
     void invalidGuess_GameLost() {
         GuessRequest guess = new GuessRequest(1);
+        when(itemRepo.findById(1)).thenReturn(Optional.of(createItem(1)));
         when(guessRepo.getNumOfGuessesThisGame(any(), any())).thenReturn(6);
         when(gameService.getTodaysTargetItemId()).thenReturn(2);
 
         verify(guessRepo, never()).insert(any(), any(), anyInt());
-        assertThrows(Exception.class, () -> guessService.submitGuess(guess, playerId));
+        assertThrows(GameOverException.class, () -> guessService.submitGuess(guess, playerId));
     }
-
 }

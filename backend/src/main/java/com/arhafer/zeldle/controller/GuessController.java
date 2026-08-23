@@ -17,7 +17,7 @@ public class GuessController {
     }
 
     @PostMapping("/guess")
-    public GuessResponse submitGuess(@RequestBody GuessRequest guess, @RequestAttribute("zeldle_player_id") UUID playerId) throws Exception {
+    public GuessResponse submitGuess(@RequestBody GuessRequest guess, @RequestAttribute("zeldle_player_id") UUID playerId) {
         return guessService.submitGuess(guess, playerId);
     }
 }

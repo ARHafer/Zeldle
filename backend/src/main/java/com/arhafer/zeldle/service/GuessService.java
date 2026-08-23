@@ -4,6 +4,9 @@ import com.arhafer.zeldle.constant.GameStatus;
 import com.arhafer.zeldle.dto.*;
 import com.arhafer.zeldle.entity.Item;
 import com.arhafer.zeldle.constant.Result;
+import com.arhafer.zeldle.exception.GameOverException;
+import com.arhafer.zeldle.exception.DuplicateGuessException;
+import com.arhafer.zeldle.exception.NoSuchItemException;
 import com.arhafer.zeldle.repository.GuessRepository;
 import com.arhafer.zeldle.repository.ItemRepository;
 import org.springframework.stereotype.Service;
@@ -27,16 +30,17 @@ public class GuessService {
         this.gameService = gameService;
     }
 
-    public GuessResponse submitGuess(GuessRequest guess, UUID playerId) throws Exception {
+    public GuessResponse submitGuess(GuessRequest guess, UUID playerId) {
         LocalDate today = LocalDate.now(ZoneId.of("America/New_York")); // TODO: Find a new, universal home for this.
         int numOfGuesses = guessRepo.getNumOfGuessesThisGame(playerId, today);
         int targetItemId = gameService.getTodaysTargetItemId();
 
+        Item guessedItem = itemRepo.findById(guess.itemId()).orElseThrow(() -> new NoSuchItemException(guess.itemId()));
+
         validateAndStoreGuess(guess, playerId, today, numOfGuesses, targetItemId); // Returns nothing and stores the guess if valid, throws exception if not.
         numOfGuesses++;
 
-        Item guessedItem = itemRepo.findById(guess.itemId()).orElseThrow(() -> new Exception("Replace me with a custom exception!"));
-        Item targetItem = itemRepo.findById(targetItemId).orElseThrow(() -> new Exception("Oh, oh, me too!"));
+        Item targetItem = itemRepo.findById(targetItemId).orElseThrow(() -> new NoSuchItemException(targetItemId));
 
         Feedback feedback = evaluateGuess(guessedItem, targetItem);
         GameState gameState = getGameState(guess, numOfGuesses, targetItemId);
@@ -94,16 +98,20 @@ public class GuessService {
                 item.getControlMode());
     }
 
-    private void validateAndStoreGuess(GuessRequest guess, UUID playerId, LocalDate today, int numOfGuesses, int targetItemId) throws Exception {
-        boolean itemAlreadyGuessed = guessRepo.wasItemGuessedThisGame(playerId, today, guess.itemId());
+    private void validateAndStoreGuess(GuessRequest guess, UUID playerId, LocalDate today, int numOfGuesses, int targetItemId) {
+        boolean itemPreviouslyGuessed = guessRepo.wasItemGuessedThisGame(playerId, today, guess.itemId());
         boolean gameWon = guessRepo.wasItemGuessedThisGame(playerId, today, targetItemId);
         boolean gameLost = numOfGuesses >= MAX_GUESSES;
 
-        if (!itemAlreadyGuessed && !gameWon && !gameLost) {
-            guessRepo.insert(playerId, today, guess.itemId());
-        } else {
-            throw new Exception("Hey, how come those two up there get to be replaced? I wanna be a custom exception too! :(");
+        if (itemPreviouslyGuessed) {
+            throw new DuplicateGuessException(guess.itemId());
+        } if (gameWon) {
+            throw new GameOverException(GameStatus.WON);
+        } if (gameLost) {
+            throw new GameOverException(GameStatus.LOST);
         }
+
+        guessRepo.insert(playerId, today, guess.itemId());
     }
 
     private GameState getGameState(GuessRequest guess, int numOfGuesses, int targetItemId) {
