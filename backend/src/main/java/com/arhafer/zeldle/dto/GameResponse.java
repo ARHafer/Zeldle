@@ -1,10 +1,11 @@
 package com.arhafer.zeldle.dto;
 
-/*
- * The frontend only needs to know the current date, nothing more. Target item ID is backend only and the rest of the
- * game state is stored in localStorage on the frontend. I only made this a record in case it changes in the future.
- */
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
+import java.util.List;
 
-public record GameResponse(LocalDate gameDate) {}
+public record GameResponse(LocalDate date,
+                           @JsonProperty("game_state") GameState gameState,
+                           @JsonProperty("guessed_ids") List<Integer> guessedIds,
+                           @JsonProperty("guess_history") List<Feedback> guessHistory) {}

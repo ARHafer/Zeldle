@@ -31,4 +31,12 @@ public class CustomExceptionHandler {
 
         return response;
     }
+
+    @ExceptionHandler
+    public ProblemDetail handleGameInitializationException(GameInitializationException e) {
+        ProblemDetail response = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        response.setTitle("Game Initialization Error");
+
+        return response;
+    }
 }

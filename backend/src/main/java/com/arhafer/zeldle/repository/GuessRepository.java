@@ -8,6 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @NullMarked
@@ -23,4 +24,10 @@ public interface GuessRepository extends CrudRepository<Guess, Integer> {
     @Modifying
     @Query(value = "INSERT INTO guesses (player_id, game_date, guessed_item_id) VALUES (:player_id, :game_date, :guessed_item_id)")
     void insert(@Param("player_id") UUID playerId, @Param("game_date") LocalDate gameDate, @Param("guessed_item_id") int guessedItemId);
+
+    @Query(value = "SELECT * FROM guesses WHERE player_id = :player_id AND game_date = :game_date ORDER BY time_of_guess ASC")
+    List<Guess> getPlayerGuessesThisGame(@Param("player_id") UUID playerId, @Param("game_date") LocalDate gameDate);
+
+    @Query(value = "SELECT id FROM guesses WHERE player_id = :player_id AND game_date = :game_date")
+    List<Integer> getPlayerGuessedIdsThisGame(@Param("player_id") UUID playerId, @Param("game_date") LocalDate gameDate);
 }

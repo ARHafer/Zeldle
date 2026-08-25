@@ -5,5 +5,5 @@ public enum Result {
     INCORRECT,
     TARGET_HIGHER,
     TARGET_LOWER,
-    TARGET_EQUAL
+    EQUAL
 }
