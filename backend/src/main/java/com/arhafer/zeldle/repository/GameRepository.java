@@ -15,4 +15,8 @@ public interface GameRepository extends CrudRepository<Game, LocalDate> {
     @Modifying
     @Query(value = "INSERT INTO games (date, target_item_id) VALUES (:date, :target_item_id)")
     void insert(@Param("date") LocalDate date, @Param("target_item_id") int targetItemId);
+
+    @Modifying
+    @Query(value = "DELETE FROM games WHERE date < :date")
+    void deletePreviousGames(@Param("date") LocalDate date);
 }

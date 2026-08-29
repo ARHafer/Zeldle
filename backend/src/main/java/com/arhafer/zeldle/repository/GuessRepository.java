@@ -14,20 +14,10 @@ import java.util.UUID;
 @NullMarked
 public interface GuessRepository extends CrudRepository<Guess, Integer> {
 
-    // I'm aware these method names are kinda long, but what else would I call this? lol
-    @Query(value = "SELECT COUNT(*) FROM guesses WHERE player_id = :player_id AND game_date = :game_date")
-    int getNumOfGuessesThisGame(@Param("player_id") UUID playerId, @Param("game_date") LocalDate gameDate);
-
-    @Query(value = "SELECT EXISTS (SELECT 1 FROM guesses WHERE player_id = :player_id AND game_date = :game_date AND guessed_item_id = :guessed_item_id)")
-    boolean wasItemGuessedThisGame(@Param("player_id") UUID playerId, @Param("game_date") LocalDate gameDate, @Param("guessed_item_id") int guessedItemId);
-
     @Modifying
     @Query(value = "INSERT INTO guesses (player_id, game_date, guessed_item_id) VALUES (:player_id, :game_date, :guessed_item_id)")
     void insert(@Param("player_id") UUID playerId, @Param("game_date") LocalDate gameDate, @Param("guessed_item_id") int guessedItemId);
 
-    @Query(value = "SELECT * FROM guesses WHERE player_id = :player_id AND game_date = :game_date ORDER BY time_of_guess ASC")
-    List<Guess> getPlayerGuessesThisGame(@Param("player_id") UUID playerId, @Param("game_date") LocalDate gameDate);
-
-    @Query(value = "SELECT id FROM guesses WHERE player_id = :player_id AND game_date = :game_date")
-    List<Integer> getPlayerGuessedIdsThisGame(@Param("player_id") UUID playerId, @Param("game_date") LocalDate gameDate);
+    @Query(value = "SELECT guessed_item_id FROM guesses WHERE player_id = :player_id AND game_date = :game_date ORDER BY time_of_guess ASC")
+    List<Integer> getGuessedItemIds(@Param("player_id") UUID playerId, @Param("game_date") LocalDate gameDate);
 }

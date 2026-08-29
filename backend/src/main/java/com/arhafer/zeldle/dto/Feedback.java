@@ -1,4 +1,3 @@
 package com.arhafer.zeldle.dto;
 
-public record Feedback(Results results, ItemProperties properties) {
-}
+public record Feedback(Results results, ItemProperties properties) {}

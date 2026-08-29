@@ -5,7 +5,6 @@ import com.arhafer.zeldle.dto.Feedback;
 import com.arhafer.zeldle.dto.GameResponse;
 import com.arhafer.zeldle.dto.GameState;
 import com.arhafer.zeldle.entity.Game;
-import com.arhafer.zeldle.entity.Guess;
 import com.arhafer.zeldle.entity.Item;
 import com.arhafer.zeldle.exception.GameInitializationException;
 import com.arhafer.zeldle.exception.NoSuchItemException;
@@ -38,7 +37,7 @@ public class GameService {
     private final GuessEvaluator evaluator;
     private final Clock clock;
 
-    public GameService(GameRepository gameRepo,  ItemRepository itemRepo, GuessRepository guessRepo, GuessEvaluator evaluator, Clock clock) {
+    public GameService(GameRepository gameRepo, ItemRepository itemRepo, GuessRepository guessRepo, GuessEvaluator evaluator, Clock clock) {
         this.gameRepo = gameRepo;
         this.itemRepo = itemRepo;
         this.guessRepo = guessRepo;
@@ -46,16 +45,13 @@ public class GameService {
         this.clock = clock;
     }
 
-    // Game creation can also happen on page load in case the server was down at midnight or something.
+    // Game creation can also happen on page load in case the server was down at midnight or something. //
     public GameResponse initializeGame(UUID playerId) {
         Game game = getOrCreateGame();
         LocalDate date = game.getDate();
-
-        List<Guess> guesses = guessRepo.getPlayerGuessesThisGame(playerId, date);
-        List<Integer> guessedIds = getGuessedIds(guesses);
-
+        List<Integer> guessedIds = guessRepo.getGuessedItemIds(playerId, date);
         GameState gameState = getGameState(guessedIds, game.getTargetItemId());
-        List<Feedback> guessHistory = getGuessHistory(guesses, game.getTargetItemId());
+        List<Feedback> guessHistory = getGuessHistory(guessedIds, game.getTargetItemId());
 
         return new GameResponse(date, gameState, guessedIds, guessHistory);
     }
@@ -66,6 +62,8 @@ public class GameService {
     }
 
     private Game createNewGame(LocalDate date) {
+        gameRepo.deletePreviousGames(date);
+
         int targetItemId = itemRepo.getRandomId(); // TODO: Implement algorithm for item selection.
 
         try {
@@ -76,39 +74,24 @@ public class GameService {
         }
     }
 
-    private static List<Integer> getGuessedIds(List<Guess> guesses) {
-        List<Integer> guessedIds = new ArrayList<>();
+    private List<Feedback> getGuessHistory(List<Integer> guessedIds, int targetItemId) {
+        List<Feedback> guessHistory = new ArrayList<>();
 
-        for (Guess guess : guesses) {
-            guessedIds.add(guess.getId());
+        if (guessedIds.isEmpty()) {
+            return guessHistory;
         }
 
-        return guessedIds;
-    }
-
-    private List<Feedback> getGuessHistory(List<Guess> guesses, int targetItemId) {
-        List<Feedback> guessHistory = new ArrayList<>();
+        List<Item> guessedItems = itemRepo.getItems(guessedIds);
         Item targetItem = itemRepo.findById(targetItemId).orElseThrow(() -> new NoSuchItemException(targetItemId));
 
-        for (Guess guess : guesses) {
-            Item guessedItem = itemRepo.findById(guess.getGuessedItemId()).orElseThrow(() -> new NoSuchItemException(guess.getGuessedItemId()));
-            /*
-             * TODO: Find a better way to do this, this is atrocious.
-             *  Maybe just get a list of guessed item IDs from the guesses table,
-             *  and use a single database call to look up the Items for every ID.
-             */
-
+        for (Item guessedItem : guessedItems) {
             guessHistory.add(evaluator.evaluateGuess(guessedItem, targetItem));
         }
 
         return guessHistory;
     }
 
-    // #PackagePrivateGang #SharingIsCaring
-    int getTodaysTargetItemId() {
-        return getOrCreateGame().getTargetItemId();
-    }
-
+    // #PackagePrivateGang #SharingIsCaring (Used in GuessService) //
     GameState getGameState(List<Integer> guessedIds, int targetItemId) {
         int numOfGuesses = guessedIds.size();
         int guessesRemaining = MAX_GUESSES - numOfGuesses;
@@ -123,5 +106,9 @@ public class GameService {
         }
 
         return new GameState(guessesRemaining, gameStatus);
+    }
+
+    int getTodaysTargetItemId() {
+        return getOrCreateGame().getTargetItemId();
     }
 }

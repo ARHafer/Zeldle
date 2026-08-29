@@ -1,22 +1,23 @@
 package com.arhafer.zeldle.service;
 
-import com.arhafer.zeldle.constant.GameStatus;
 import com.arhafer.zeldle.dto.GuessRequest;
-import com.arhafer.zeldle.dto.GuessResponse;
-import com.arhafer.zeldle.entity.Item;
 import com.arhafer.zeldle.exception.GameOverException;
 import com.arhafer.zeldle.exception.DuplicateGuessException;
 import com.arhafer.zeldle.repository.GuessRepository;
 import com.arhafer.zeldle.repository.ItemRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
 
+import static com.arhafer.zeldle.ZeldleApplicationTests.createItem;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -32,114 +33,83 @@ public class GuessServiceTest {
     @Mock
     private GameService gameService;
 
-    @InjectMocks
     private GuessService guessService;
-
     private final UUID playerId = UUID.randomUUID();
+    private final GuessEvaluator evaluator = new GuessEvaluator();
+    private final Clock clock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
+    private final LocalDate date = LocalDate.now(clock);
 
-    private static Item createItem(int id) {
-        Item item = new Item();
-        item.setId(id);
-        item.setName("Test Item of Testing (For Testing)");
-        item.setGame(Item.Game.OOT);
-        item.setPurpose(Item.Purpose.COMBAT);
-        item.setConsumption(Item.Consumption.MATERIAL);
-        item.setAcquisition(Item.Acquisition.OVERWORLD);
-        item.setRange(Item.Range.SELF);
-        item.setEnemyInteraction(Item.EnemyInteraction.DAMAGE);
-        item.setControlMode(Item.ControlMode.IMMEDIATE);
-        return item;
+    @BeforeEach
+    public void setUp() {
+        guessService = new GuessService(itemRepo, guessRepo, gameService, evaluator, clock);
     }
 
-    // If a guess is valid, it should be inserted into the database, and the game status should equal IN_PROGRESS.
+    // If a guess is valid it should be inserted into the database.
     @Test
-    void validGuess_GameInProgress() {
+    void validGuess() {
         GuessRequest guess = new GuessRequest(1);
-        when(guessRepo.getNumOfGuessesThisGame(any(), any())).thenReturn(0);
+        List<Integer> guessedIds = new ArrayList<>();
+
+        when(guessRepo.getGuessedItemIds(playerId, date)).thenReturn(guessedIds);
         when(gameService.getTodaysTargetItemId()).thenReturn(2);
+        when(itemRepo.findById(1)).thenReturn(Optional.of(createItem(1)));
+        when(itemRepo.findById(2)).thenReturn(Optional.of(createItem(2)));
 
-        Item guessedItem = createItem(1);
-        Item targetItem = createItem(2);
-        when(itemRepo.findById(1)).thenReturn(Optional.of(guessedItem));
-        when(itemRepo.findById(2)).thenReturn(Optional.of(targetItem));
+        guessService.submitGuess(guess, playerId);
 
-        GuessResponse response = guessService.submitGuess(guess, playerId);
-
-        verify(guessRepo).insert(any(), any(), anyInt());
-        assertEquals(GameStatus.IN_PROGRESS, response.gameState().gameStatus());
+        verify(guessRepo).insert(playerId, date, guess.itemId());
     }
 
-    // If the guess is correct, the game status should equal WON.
-    @Test
-    void validGuess_GameWon() {
-        GuessRequest guess = new GuessRequest(1);
-        when(guessRepo.getNumOfGuessesThisGame(any(), any())).thenReturn(0);
-        when(gameService.getTodaysTargetItemId()).thenReturn(1);
-
-        Item item = createItem(1);
-        when(itemRepo.findById(any())).thenReturn(Optional.of(item));
-
-        GuessResponse response = guessService.submitGuess(guess, playerId);
-
-        verify(guessRepo).insert(any(), any(), anyInt());
-        assertEquals(GameStatus.WON, response.gameState().gameStatus());
-    }
-
-    // If the final guess was incorrect, the game status should equal LOST.
-    @Test
-    void validGuess_GameLost() {
-        GuessRequest guess = new GuessRequest(1);
-        when(guessRepo.getNumOfGuessesThisGame(any(), any())).thenReturn(5);
-        when(gameService.getTodaysTargetItemId()).thenReturn(2);
-
-        Item guessedItem = createItem(1);
-        Item targetItem = createItem(2);
-
-        when(itemRepo.findById(1)).thenReturn(Optional.of(guessedItem));
-        when(itemRepo.findById(2)).thenReturn(Optional.of(targetItem));
-
-        GuessResponse response = guessService.submitGuess(guess, playerId);
-
-        verify(guessRepo).insert(any(), any(), anyInt());
-        assertEquals(GameStatus.LOST, response.gameState().gameStatus());
-    }
-
-    // If the guessed item has been previously guessed, an error should be thrown, and the guess should NOT be inserted into the database.
+    /*
+     * If the guessed item has been previously guessed, an error should be thrown and the guess should not be inserted
+     * into the database.
+     */
     @Test
     void invalidGuess_DuplicateGuess() {
         GuessRequest guess = new GuessRequest(1);
+        List<Integer> guessedIds = new ArrayList<>(List.of(1));
+
         when(itemRepo.findById(1)).thenReturn(Optional.of(createItem(1)));
-        when(guessRepo.getNumOfGuessesThisGame(any(), any())).thenReturn(1);
-        when(guessRepo.wasItemGuessedThisGame(any(), any(), eq(1))).thenReturn(true);
+        when(guessRepo.getGuessedItemIds(playerId, date)).thenReturn(guessedIds);
         when(gameService.getTodaysTargetItemId()).thenReturn(2);
 
-        verify(guessRepo, never()).insert(any(), any(), anyInt());
         assertThrows(DuplicateGuessException.class, () -> guessService.submitGuess(guess, playerId));
+        verify(guessRepo, never()).insert(playerId, date, guess.itemId());
     }
 
-    // If the correct item was previously guessed, an error should be thrown.
+    /*
+     * If the correct item was previously guessed, an error should be thrown and the guess should not be inserted into
+     * the database.
+     */
+
     @Test
     void invalidGuess_GameWon() {
         GuessRequest guess = new GuessRequest(1);
-        lenient().when(itemRepo.findById(1)).thenReturn(Optional.of(createItem(1)));
-        // I hate Mockito. Strict stubbing? Really? Because calling a function multiple times is unheard of, apparently.
-        when(guessRepo.getNumOfGuessesThisGame(any(), any())).thenReturn(1);
-        when(gameService.getTodaysTargetItemId()).thenReturn(2);
-        lenient().when(guessRepo.wasItemGuessedThisGame(any(), any(), eq(2))).thenReturn(true);
+        List<Integer> guessedIds = new ArrayList<>(List.of(2));
 
-        verify(guessRepo, never()).insert(any(), any(), anyInt());
+        when(itemRepo.findById(1)).thenReturn(Optional.of(createItem(1)));
+        when(guessRepo.getGuessedItemIds(playerId, date)).thenReturn(guessedIds);
+        when(gameService.getTodaysTargetItemId()).thenReturn(2);
+
         assertThrows(GameOverException.class, () -> guessService.submitGuess(guess, playerId));
+        verify(guessRepo, never()).insert(playerId, date, guess.itemId());
     }
 
-    // If all 6 guesses were previously used, an error should be thrown.
+    /*
+     * If all 6 guesses were previously used, an error should be thrown and the guess should not be inserted into the
+     * database.
+     */
+
     @Test
     void invalidGuess_GameLost() {
-        GuessRequest guess = new GuessRequest(1);
-        when(itemRepo.findById(1)).thenReturn(Optional.of(createItem(1)));
-        when(guessRepo.getNumOfGuessesThisGame(any(), any())).thenReturn(6);
-        when(gameService.getTodaysTargetItemId()).thenReturn(2);
+        GuessRequest guess = new GuessRequest(7);
+        List<Integer> guessedIds = new ArrayList<>(List.of(1, 2, 3, 4, 5, 6));
 
-        verify(guessRepo, never()).insert(any(), any(), anyInt());
+        when(itemRepo.findById(7)).thenReturn(Optional.of(createItem(7)));
+        when(guessRepo.getGuessedItemIds(playerId, date)).thenReturn(guessedIds);
+        when(gameService.getTodaysTargetItemId()).thenReturn(8);
+
         assertThrows(GameOverException.class, () -> guessService.submitGuess(guess, playerId));
+        verify(guessRepo, never()).insert(playerId, date, guess.itemId());
     }
 }

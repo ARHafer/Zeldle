@@ -18,7 +18,7 @@ public class GameController {
     }
 
     @GetMapping("/game")
-    public GameResponse getTodaysGame(@RequestAttribute("zeldle_player_id") UUID playerId) {
+    public GameResponse initializeGame(@RequestAttribute("zeldle_player_id") UUID playerId) {
         return gameService.initializeGame(playerId);
     }
 }

@@ -36,7 +36,7 @@ public class GuessService {
 
     public GuessResponse submitGuess(GuessRequest guess, UUID playerId) {
         LocalDate today = LocalDate.now(clock);
-        List<Integer> guessedIds = guessRepo.getPlayerGuessedIdsThisGame(playerId, today);
+        List<Integer> guessedIds = guessRepo.getGuessedItemIds(playerId, today);
         int targetItemId = gameService.getTodaysTargetItemId();
 
         Item guessedItem = itemRepo.findById(guess.itemId()).orElseThrow(() -> new NoSuchItemException(guess.itemId()));
