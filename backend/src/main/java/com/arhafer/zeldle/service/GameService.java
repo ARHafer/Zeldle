@@ -61,16 +61,26 @@ public class GameService {
         return gameRepo.findById(today).orElseGet(() -> createNewGame(today));
     }
 
-    private Game createNewGame(LocalDate date) {
-        gameRepo.deletePreviousGames(date);
-
-        int targetItemId = itemRepo.getRandomId(); // TODO: Implement algorithm for item selection.
+    private Game createNewGame(LocalDate today) {
+        int targetItemId = selectTargetItemId(today);
 
         try {
-            gameRepo.insert(date, targetItemId);
-            return new Game(date, targetItemId);
+            gameRepo.insert(today, targetItemId);
+            return new Game(today, targetItemId);
         } catch (DuplicateKeyException e) {
-            return gameRepo.findById(date).orElseThrow(GameInitializationException::new);
+            return gameRepo.findById(today).orElseThrow(GameInitializationException::new);
+        }
+    }
+
+    private int selectTargetItemId(LocalDate today) {
+        LocalDate recirculationDate = today.minusWeeks(2);
+        gameRepo.deletePreviousGames(recirculationDate);
+        List<Integer> excludedIds = gameRepo.getTargetItemIds();
+
+        if (excludedIds.isEmpty()) {
+            return itemRepo.getRandomId();
+        } else {
+            return itemRepo.getRandomIdGivenExclusions(excludedIds);
         }
     }
 

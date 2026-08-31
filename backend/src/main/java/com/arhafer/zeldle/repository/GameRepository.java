@@ -8,6 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @NullMarked
 public interface GameRepository extends CrudRepository<Game, LocalDate> {
@@ -17,6 +18,9 @@ public interface GameRepository extends CrudRepository<Game, LocalDate> {
     void insert(@Param("date") LocalDate date, @Param("target_item_id") int targetItemId);
 
     @Modifying
-    @Query(value = "DELETE FROM games WHERE date < :date")
-    void deletePreviousGames(@Param("date") LocalDate date);
+    @Query(value = "DELETE FROM games WHERE date < :recirculation_date")
+    void deletePreviousGames(@Param("recirculation_date") LocalDate recirculationDate);
+
+    @Query(value = "SELECT target_item_id FROM games")
+    List<Integer> getTargetItemIds();
 }
