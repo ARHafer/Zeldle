@@ -14,9 +14,9 @@ public interface ItemRepository extends CrudRepository<Item, Integer> {
     @Query("SELECT id FROM items ORDER BY RANDOM() LIMIT 1")
     int getRandomId();
 
-    @Query("SELECT id FROM items WHERE id NOT IN :excluded_ids ORDER BY RANDOM() LIMIT 1")
+    @Query("SELECT id FROM items WHERE id NOT IN (:excluded_ids) ORDER BY RANDOM() LIMIT 1")
     int getRandomIdGivenExclusions(@Param("excluded_ids") List<Integer> excludedIds);
 
-    @Query(value = "SELECT * FROM items WHERE id IN :ids")
+    @Query(value = "SELECT * FROM items WHERE id IN (:ids)")
     List<Item> getItems(@Param("ids") List<Integer> ids);
 }
