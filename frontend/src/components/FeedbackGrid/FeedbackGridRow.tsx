@@ -1,9 +1,9 @@
-import type { Result } from "../../types/Feedback";
-import type { GuessData } from "../../types/GuessData"; 
+import type { Result } from "../../types/Results";
+import type { Feedback } from "../../types/Feedback"; 
 
-export default function FeedbackGridRow(props: { guessData: (GuessData | null) }) {
+export default function FeedbackGridRow(props: { feedback: (Feedback | null) }) {
 
-    if (props.guessData == null) {
+    if (props.feedback == null) {
         return (
             <tr>
                 <td style={{ backgroundColor: 'gray' }}></td>
@@ -18,18 +18,18 @@ export default function FeedbackGridRow(props: { guessData: (GuessData | null) }
         );
     }
 
-    const { feedback, properties } = props.guessData;
+    const { results, properties } = props.feedback;
 
     return (
         <tr>
-            <td style={{ backgroundColor: getResultColor(feedback.name) }}>{properties.name}</td>
-            <td style={{ backgroundColor: getResultColor(feedback.game) }}>{properties.game} {getReleaseOrderArrow(feedback.gameReleaseDate)}</td>
-            <td style={{ backgroundColor: getResultColor(feedback.purpose) }}>{properties.purpose}</td>
-            <td style={{ backgroundColor: getResultColor(feedback.consumption) }}>{properties.consumption}</td>
-            <td style={{ backgroundColor: getResultColor(feedback.acquisition) }}>{properties.acquisition}</td>
-            <td style={{ backgroundColor: getResultColor(feedback.range) }}>{properties.range}</td>
-            <td style={{ backgroundColor: getResultColor(feedback.enemyInteraction) }}>{properties.enemyInteraction}</td>
-            <td style={{ backgroundColor: getResultColor(feedback.controlMode) }}>{properties.controlMode}</td>
+            <td style={{ backgroundColor: getResultColor(results.name) }}>{properties.name}</td>
+            <td style={{ backgroundColor: getResultColor(results.game) }}>{properties.game} {getReleaseOrderArrow(results.gameReleaseDate)}</td>
+            <td style={{ backgroundColor: getResultColor(results.purpose) }}>{properties.purpose}</td>
+            <td style={{ backgroundColor: getResultColor(results.consumption) }}>{properties.consumption}</td>
+            <td style={{ backgroundColor: getResultColor(results.acquisition) }}>{properties.acquisition}</td>
+            <td style={{ backgroundColor: getResultColor(results.range) }}>{properties.range}</td>
+            <td style={{ backgroundColor: getResultColor(results.enemyInteraction) }}>{properties.enemyInteraction}</td>
+            <td style={{ backgroundColor: getResultColor(results.controlMode) }}>{properties.controlMode}</td>
         </tr>
     )
 }
@@ -43,10 +43,10 @@ function getResultColor(result: Result): string {
 }
 
 function getReleaseOrderArrow(result: Result): string {
-    if (result == 'HIGHER') {
-        return '🠗';
-    } else if (result == 'LOWER') {
+    if (result == 'TARGET_HIGHER') {
         return '🠕';
+    } else if (result == 'TARGET_LOWER') {
+        return '🠗';
     } else {
         return '';
     }

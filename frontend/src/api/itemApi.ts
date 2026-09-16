@@ -6,7 +6,7 @@ export async function getItems(): Promise<Item[]> {
     const response = await fetch(`${BACKEND_URL}/items`);
 
     if (!response.ok) {
-        throw new Error('Failed to fetch items.');
+        console.error('An unknown error occured, and items could not be fetched.');
     }
 
     return response.json();

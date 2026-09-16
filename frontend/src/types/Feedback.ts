@@ -1,15 +1,7 @@
-export type Result = 'CORRECT' | 'INCORRECT' | 'HIGHER' | 'LOWER' | 'EQUAL'
+import type { Results } from "./Results";
+import type { ItemProperties } from "./ItemProperties";
 
 export interface Feedback {
-
-    correct: boolean;
-    name: Result;
-    game: Result;
-    gameReleaseDate: Result;
-    purpose: Result;
-    consumption: Result;
-    acquisition: Result;
-    range: Result;
-    enemyInteraction: Result;
-    controlMode: Result; 
+    results: Results
+    properties: ItemProperties
 }

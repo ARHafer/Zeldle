@@ -1,7 +1,7 @@
-import type { GuessData } from "../../types/GuessData";
+import type { Feedback } from "../../types/Feedback";
 import FeedbackGridRow from "./FeedbackGridRow";
 
-export default function FeedbackGrid(props: { guessHistory: (GuessData | null)[] }) {
+export default function FeedbackGrid(props: { guessHistory: (Feedback | null)[] }) {
 
     const rows = Array.from({ length: 6 }, (_, i) => props.guessHistory[i] ?? null);
 
@@ -21,8 +21,8 @@ export default function FeedbackGrid(props: { guessHistory: (GuessData | null)[]
             </thead>
 
             <tbody>
-                {rows.map((guessData, i) => (
-                    <FeedbackGridRow key={i} guessData={guessData}/>
+                {rows.map((feedback, i) => (
+                    <FeedbackGridRow key={i} feedback={feedback}/>
                 ))}
             </tbody>
         </table>

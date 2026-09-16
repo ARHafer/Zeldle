@@ -9,7 +9,7 @@ import useStorage from '../hooks/useStorage';
 function GamePage() {
 
   const [items, setItems] = useState<Item[]>([]);
-  const { guess, isLoading } = useGuess();
+  const { guessItem, isLoading } = useGuess();
   const { storeGuess, guessedIds, guessHistory } = useStorage();
 
   async function handleCellClick(itemId: number) {
@@ -17,10 +17,10 @@ function GamePage() {
       return;
     }
 
-    const guessData = await guess(itemId)
+    const guess = await guessItem(itemId)
  
-    if (guessData != null) {
-      storeGuess(itemId, guessData);
+    if (guess != null) {
+      storeGuess(itemId, guess);
     }
   }
 

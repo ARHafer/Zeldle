@@ -5,8 +5,7 @@ type Range = 'SELF' | 'CLOSE' | 'RANGED'
 type EnemyInteraction = 'DAMAGE' | 'DISRUPT' | 'NONE'
 type ControlMode = 'IMMEDIATE' | 'TARGETED' | 'PERSISTENT'
 
-export interface ItemProperty {
-    
+export interface ItemProperties {
     name: string
     game: string
     purpose: Purpose

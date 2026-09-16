@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
-import type { GuessData } from "../types/GuessData";
-import { getTodaysGame } from "../api/gameApi";
+import type { Feedback } from "../types/Feedback";
+import { initializeGame } from "../api/gameApi";
 import type { Game } from "../types/Game";
+import type { Guess } from "../types/Guess";
 
 export default function useStorage() {
 
     const [guessedIds, setGuessedIds] = useState<Set<number>>(new Set());
-    const [guessHistory, setGuessHistory] = useState<GuessData[]>([]);
+    const [guessHistory, setGuessHistory] = useState<Feedback[]>([]);
     const [game, setGame] = useState<Game | null>(null);
 
     useEffect(() => {
-            getTodaysGame().then(game => {
+            initializeGame().then(game => {
                 setGame(game);
 
-                const key = `zeldle_${game.gameDate}`;
+                const key = `zeldle_${game.date}`;
                 const storedData = localStorage.getItem(key);
 
                 if (storedData != null) {
@@ -25,15 +26,15 @@ export default function useStorage() {
             })
         }, [])
 
-    async function storeGuess(id: number, guessData: GuessData) {
+    async function storeGuess(id: number, guess: Guess) {
         if (game == null) {
-            return; // Shouldn't ever happen, but TypeScript won't stop yelling at me.
+            return;
         }
 
-        const key = `zeldle_${game.gameDate}`;
+        const key = `zeldle_${game.date}`;
         const data = {
-            guessedIds: [...guessedIds, id], // Stored as an array here, since JSON.stringify doesn't recognize sets.
-            guessHistory: [...guessHistory, guessData]
+            guessedIds: [...guessedIds, id],
+            guessHistory: [...guessHistory, guess.feedback]
         };
 
         localStorage.setItem(key, JSON.stringify(data));
