@@ -1,36 +1,32 @@
-import { useEffect, useState } from 'react';
-import { getItems } from '../api/itemApi';
-import type { Item } from '../types/Item';
 import ItemList from '../components/ItemList/ItemList';
-import useGuess from '../hooks/useGuess'
 import FeedbackGrid from '../components/FeedbackGrid/FeedbackGrid';
-import useStorage from '../hooks/useStorage';
+import useItems from '../hooks/useItems';
+import useGuess from '../hooks/useGuess'
+import useGame from '../hooks/useGame'
 
 function GamePage() {
 
-  const [items, setItems] = useState<Item[]>([]);
-  const { guessItem, isLoading } = useGuess();
-  const { storeGuess, guessedIds, guessHistory } = useStorage();
+  const { items, isItemListLoading } = useItems();
+  const { guessItem, isGuessLoading } = useGuess();
+  const { updateGameCache, game, isGameLoading } = useGame();
 
-  async function handleCellClick(itemId: number) {
-    if (guessedIds.has(itemId)) {
+  async function handleCellClick(itemId: number): Promise<void> {
+    if (isGameLoading || game == null || game.guessedIds.includes(itemId)) {
       return;
     }
 
     const guess = await guessItem(itemId)
  
     if (guess != null) {
-      storeGuess(itemId, guess);
+      updateGameCache(itemId, guess);
     }
   }
 
-  useEffect(() => {
-    getItems().then(setItems);
-  }, [])
-
   return (
-  <><ItemList items={items} guessedIds={guessedIds} isLoading={isLoading} onCellClick={handleCellClick} />
-  <FeedbackGrid guessHistory={guessHistory}/></>
+  <>
+  <ItemList items={items} guessedIds={game?.guessedIds ?? []} isLoading={isGuessLoading && isItemListLoading} onCellClick={handleCellClick}/>
+  <FeedbackGrid guessHistory={game?.guessHistory ?? []}/>
+  </>
   )
 }
 
