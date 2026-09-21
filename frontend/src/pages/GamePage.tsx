@@ -24,7 +24,7 @@ function GamePage() {
 
   return (
   <>
-  <ItemList items={items} guessedIds={game?.guessedIds ?? []} isLoading={isGuessLoading && isItemListLoading} onCellClick={handleCellClick}/>
+  <ItemList items={items} guessedIds={game?.guessedIds ?? []} isLoading={isGuessLoading || isItemListLoading} onCellClick={handleCellClick}/>
   <FeedbackGrid guessHistory={game?.guessHistory ?? []}/>
   </>
   )

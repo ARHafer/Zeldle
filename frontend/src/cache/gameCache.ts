@@ -23,10 +23,7 @@ import type { Game } from "../types/Game";
         localStorage.setItem(STORAGE_KEY, JSON.stringify(game));
     }
 
-    /*
-     * This should be formatted identically to the LocalDate the backend. 
-     * This should allow it to be compared to the date returned from the /game endpoint.
-     */
+    // This is formatted identically to a Java LocalDate, which will allow it to be compared to the date returned from the /game endpoint.
     function getCurrentDate(): string {
         return new Intl.DateTimeFormat("en-CA", {
             timeZone: "America/New_York",
