@@ -1,0 +1,290 @@
+.item-list-container {
+    position: fixed;
+
+    left: 18px;
+    right: 18px;
+    bottom: 55px;
+
+    height: 115px;
+
+    padding-top: 14px;
+    padding-right: 14px;
+    padding-bottom: 16px;
+    padding-left: 14px;
+
+    display: flex;
+    flex-direction: column;
+
+    /* An attempt at copying the OoT save file gradient. */
+    background:
+        linear-gradient(
+            310deg,
+            #303161 0%,
+            #6263D2 10%,
+            #303363 45%,
+            #3b397f 60%,
+            #4e4cab 70%,
+            #2b2a62 100%
+        );
+
+    border-top: 5px solid #5F60CC;
+    border-right: 5px solid #202341;
+    border-bottom: 5px solid #202242;
+    border-left: 5px solid #5456B2;   
+}
+
+.item-list {
+    position: relative;
+
+    flex: 1;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    gap: 10px;
+
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+
+    list-style: none;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+}
+
+.item-list::-webkit-scrollbar {
+    display: none;
+}
+
+.item-list > li {
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 0;
+}
+
+/* Cells */
+
+.item-list-cell {
+    position: relative;
+
+    width: 190px;
+    height: 40px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: left;
+
+    gap: 8px;
+
+    padding-left: 15px;
+
+    background:
+        linear-gradient(
+            270deg,
+            #3F3E86 0%,
+            #4953AC 50%,
+            #2E2E5F 100%
+        );
+
+    color: white;
+
+    border-top: 3px solid #5F60CC;
+    border-right: 3px solid #202341;
+    border-bottom: 3px solid #202341;
+    border-left: 3px solid #5F60CC; 
+
+    font: inherit;
+    font-size: large;
+    text-align: center;
+
+    cursor: pointer;
+}
+
+.item-list-cell img {
+    position: relative;
+
+    width: 25px;
+    height: 25px;
+
+    object-fit: contain;
+}
+
+.item-list-cell span {
+    position: relative;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.item-list-cell:hover:not(:disabled) {
+    background:
+        linear-gradient(
+        270deg,
+            #52659D 0%,
+            #70A0CE 50%,
+            #404A7B 100%
+        );
+
+    box-shadow:
+        0 0 6px rgba(136, 191, 236, 0.9),
+        0 0 15px rgba(136, 191, 236, 0.6);
+
+    color: #23485C;
+    text-overflow: none;
+
+    border-top: 3px solid #86B8E4;
+    border-right: 3px solid #4C6E8A;
+    border-bottom: 3px solid #4C6E8A;
+    border-left: 3px solid #86B8E4;
+
+    padding-right: 5px;
+
+    min-width: 190px;
+    width: max-content;
+}
+
+.item-list-cell:disabled {
+    opacity: 0.5;
+
+    cursor: default;
+}
+
+/* Searchbar */
+
+.item-list-searchbar-container {
+    position: absolute;
+
+    left: 30px;
+    bottom: -40px;
+
+    width: 360px;
+
+    height: 40px;
+
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+
+    display: flex;
+
+    background:
+        linear-gradient(
+            270deg,
+            #3F3E86 0%,
+            #4953AC 50%,
+            #2E2E5F 100%
+        );
+
+    border-top: 5px ridge #5152A7;
+    border-right: 3px solid #202341;
+    border-bottom: 3px solid #202341;
+    border-left: 3px solid #5F60CC; 
+
+    /* Trying to make the "connector hook" thingy from the OoT save file select. */
+    clip-path:
+        polygon(
+            10px 0,
+            calc(100% - 10px) 0,
+            100% 10px,
+            100% 100%,
+            0 100%,
+            0 10px
+        );
+}
+
+.item-list-searchbar-container::before {
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+    top: -7px;
+
+    transform: translateX(-50%);
+
+    width: 72%;
+    height: 7px;
+
+    background:#202341;
+
+    z-index: -1;
+}
+
+.item-list-searchbar {
+    padding-left: 5px;
+
+    width: 100%;
+
+    background:
+        linear-gradient(
+            270deg,
+            #3F3E86 0%,
+            #4953AC 50%,
+            #2E2E5F 100%
+        );
+
+    color: white;
+
+    border: none;
+    outline: none;
+
+    font: inherit;
+    font-size: large;
+}
+
+.item-list-searchbar::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.item-list-searchbar:focus,
+.item-list-searchbar-container:hover .item-list-searchbar {
+    background:
+        linear-gradient(
+        270deg,
+            #52659D 0%,
+            #70A0CE 50%,
+            #404A7B 100%
+        );
+
+    color: white;
+}
+
+.item-list-searchbar-container:focus-within,
+.item-list-searchbar-container:hover {
+    background:
+        linear-gradient(
+        270deg,
+            #52659D 0%,
+            #70A0CE 50%,
+            #404A7B 100%
+        );
+
+    border-top: 5px ridge #86B8E4;
+    border-right: 3px solid #4C6E8A;
+    border-bottom: 3px solid #4C6E8A;
+    border-left: 3px solid #86B8E4;
+}
+
+/* Just for the error messages. If it's gonna break, let it break in style! :p */
+.item-list > p {
+    width: 100%;
+
+    margin: 0;
+
+    align-self: center;
+
+    color: white;
+
+    text-align: center;
+}

@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import placeholder from '../../assets/placeholder.png';
 import type { Item } from '../../types/Item';
 
+import './ItemList.css';
+
 export default function ItemListCell(props: { item: Item; guessedIds: number[]; isLoading: boolean; onCellClick: (itemId: number) => void }) {
 
     const [imageSrc, setImageSrc] = useState(placeholder);

@@ -4,6 +4,14 @@ import useItems from '../hooks/useItems';
 import useGuess from '../hooks/useGuess'
 import useGame from '../hooks/useGame'
 
+/* 
+ * TODO: 
+ * Fix guess ordering.
+ * Beta styling for FeedbackGrid.
+ * Final debugging and code clean-up.
+ * Complete styling.
+ */
+
 function GamePage() {
 
   const { items, isItemListLoading } = useItems();
