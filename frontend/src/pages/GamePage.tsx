@@ -4,12 +4,20 @@ import useItems from '../hooks/useItems';
 import useGuess from '../hooks/useGuess'
 import useGame from '../hooks/useGame'
 
+import './GamePage.css';
+
 /* 
- * TODO: 
- * Fix guess ordering.
- * Beta styling for FeedbackGrid.
+ * Add scroll buttons for ItemList. 
+ * Add pop-ups for game win / loss.
+ * Add health meter.
+ * Add contact / bug-reporting functionality.
+ * Beta styling & sound effects for rest of site.
+ * Finish FeedbackGrid styling (game release arrows & animations).
+ * Fix incorrect guess ordering.
  * Final debugging and code clean-up.
- * Complete styling.
+ * Redesign mobile UI.
+ * Final revision for beta styling.
+ * Beta release!!!
  */
 
 function GamePage() {
@@ -31,10 +39,12 @@ function GamePage() {
   }
 
   return (
-  <>
-  <ItemList items={items} guessedIds={game?.guessedIds ?? []} isLoading={isGuessLoading || isItemListLoading} onCellClick={handleCellClick}/>
-  <FeedbackGrid guessHistory={game?.guessHistory ?? []}/>
-  </>
+  <main className='game-page'>
+
+    <ItemList items={items} guessedIds={game?.guessedIds ?? []} isLoading={isGuessLoading || isItemListLoading} onCellClick={handleCellClick}/>
+    <FeedbackGrid guessHistory={game?.guessHistory ?? []}/>
+
+  </main>
   )
 }
 

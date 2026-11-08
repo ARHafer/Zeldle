@@ -15,22 +15,13 @@
     display: flex;
     flex-direction: column;
 
-    /* An attempt at copying the OoT save file gradient. */
-    background:
-        linear-gradient(
-            310deg,
-            #303161 0%,
-            #6263D2 10%,
-            #303363 45%,
-            #3b397f 60%,
-            #4e4cab 70%,
-            #2b2a62 100%
-        );
+    background: var(--oot_container-gradient);
 
-    border-top: 5px solid #5F60CC;
-    border-right: 5px solid #202341;
-    border-bottom: 5px solid #202242;
-    border-left: 5px solid #5456B2;   
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-image: var(--oot_container-border-gradient) 1;
+
+    background-clip: padding-box;
 }
 
 .item-list {
@@ -86,20 +77,14 @@
 
     padding-left: 15px;
 
-    background:
-        linear-gradient(
-            270deg,
-            #3F3E86 0%,
-            #4953AC 50%,
-            #2E2E5F 100%
-        );
+    background: var(--oot_cell-gradient);
 
     color: white;
 
-    border-top: 3px solid #5F60CC;
-    border-right: 3px solid #202341;
-    border-bottom: 3px solid #202341;
-    border-left: 3px solid #5F60CC; 
+    border-top: var(--oot_cell-border-top);
+    border-right: var(--oot_cell-border-right);
+    border-bottom: var(--oot_cell-border-bottom);
+    border-left: var(--oot_cell-border-left);
 
     font: inherit;
     font-size: large;
@@ -178,13 +163,7 @@
 
     display: flex;
 
-    background:
-        linear-gradient(
-            270deg,
-            #3F3E86 0%,
-            #4953AC 50%,
-            #2E2E5F 100%
-        );
+    background: var(--oot_cell-gradient);
 
     border-top: 5px ridge #5152A7;
     border-right: 3px solid #202341;
@@ -226,13 +205,7 @@
 
     width: 100%;
 
-    background:
-        linear-gradient(
-            270deg,
-            #3F3E86 0%,
-            #4953AC 50%,
-            #2E2E5F 100%
-        );
+    background: var(--oot_cell-gradient);
 
     color: white;
 

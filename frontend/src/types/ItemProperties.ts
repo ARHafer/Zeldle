@@ -6,6 +6,7 @@ type EnemyInteraction = 'DAMAGE' | 'DISRUPT' | 'NONE'
 type ControlMode = 'IMMEDIATE' | 'TARGETED' | 'PERSISTENT'
 
 export interface ItemProperties {
+    id: number
     name: string
     game: string
     purpose: Purpose

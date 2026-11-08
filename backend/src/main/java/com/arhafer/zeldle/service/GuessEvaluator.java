@@ -50,6 +50,7 @@ public class GuessEvaluator {
 
     private static ItemProperties getItemProperties(Item item) {
         return new ItemProperties(
+                item.getId(),
                 item.getName(),
                 item.getGame().getFullName(),
                 item.getPurpose(),

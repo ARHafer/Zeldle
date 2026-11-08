@@ -21,6 +21,7 @@ export default function ItemList(props: { items: Item[]; guessedIds: number[]; i
                 <input className='item-list-searchbar'
                 type='text'
                 placeholder='Loading...'
+                disabled
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}></input>
             </div>
@@ -40,6 +41,7 @@ export default function ItemList(props: { items: Item[]; guessedIds: number[]; i
                 <input className='item-list-searchbar'
                 type='text'
                 placeholder='Error!'
+                disabled
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}></input>
             </div>

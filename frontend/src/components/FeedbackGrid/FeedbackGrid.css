@@ -1,0 +1,150 @@
+.feedback-grid-container {
+    position: relative;
+
+    top: -9vh;
+
+    width: min(96vw, 1200px);
+
+    overflow-x: scroll;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+
+    margin-block: auto;
+    margin-inline: auto;
+
+    padding: 1vw;
+
+    background: var(--oot_container-gradient);
+
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-image: var(--oot_container-border-gradient) 1;
+
+    background-clip: padding-box;
+
+    clip-path: var(--oot_container-bevel);
+}
+
+.feedback-grid {
+    width: 100%;
+
+    table-layout: fixed;
+
+    border-collapse: separate;
+    border-spacing: clamp(3px, 0.55vw, 6px);
+
+    text-align: center;
+    font-size: clamp(0.7rem, 2vw, 1rem);
+    
+    padding-left: 0.7%;
+
+    border-top: 3px solid #122143;
+    border-left: 3px solid #122143;
+
+    opacity: 100%;
+}
+
+/* Cells */
+
+.feedback-grid-header {
+    vertical-align: bottom;
+    color: white;
+    -webkit-text-stroke: 3px black;
+    paint-order: stroke fill;
+}
+
+.short-name {
+    display: none;
+}
+
+.feedback-grid-cell {
+    position: relative;
+
+    width: 140px;
+    height: 81px;
+    
+    box-sizing: border-box;
+
+    background: var(--oot_cell-gradient);
+
+    color: white;
+    -webkit-text-stroke: 3px black;
+    paint-order: stroke fill;
+
+    border-top: var(--oot_cell-border-top);
+    border-right: var(--oot_cell-border-right);
+    border-bottom: var(--oot_cell-border-bottom);
+    border-left: var(--oot_cell-border-left);
+
+    text-align: center;
+
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+}
+
+.feedback-grid-cell img {
+    display: block;
+
+    margin-top: 3px;
+    margin-right: auto;
+    margin-bottom: 0px;
+    margin-left: auto;
+
+    width: 30%;
+    height: auto;
+    aspect-ratio: 1;
+
+    object-fit: contain;
+}
+
+.correct {
+    background:
+        linear-gradient(
+            270deg,
+            #4a863e 0%,
+            #5aac49 50%,
+            #365f2e 100%
+        );
+
+    border-top: 3px solid #7ecc5f;
+    border-right: 3px solid #294120;
+    border-bottom: 3px solid #294120;
+    border-left: 3px solid #7ecc5f;
+}
+
+.incorrect {
+    background:
+        linear-gradient(
+            270deg,
+            #863e3e 0%,
+            #ac4949 50%,
+            #5f2e2e 100%
+        );
+
+    border-top: 3px solid #cc5f5f;
+    border-right: 3px solid #412020;
+    border-bottom: 3px solid #412020;
+    border-left: 3px solid #cc5f5f;
+}
+
+@media (max-width: 1182px) {
+
+    /* Gets rid of cell text and increases image size when screen gets too small. */
+    .feedback-grid-cell span {
+        display: none;
+    }
+
+    .feedback-grid-cell img {
+        width: 60%;
+    }
+
+    /* Replaces headers with a shorter name when screen gets too small. */
+    .full-name {
+        display: none;
+    }
+
+    .short-name {
+        display: inline;
+    }
+}

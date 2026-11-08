@@ -2,7 +2,8 @@ package com.arhafer.zeldle.dto;
 
 import com.arhafer.zeldle.entity.Item;
 
-public record ItemProperties(String name,
+public record ItemProperties(int id,
+                             String name,
                              String game,
                              Item.Purpose purpose,
                              Item.Consumption consumption,

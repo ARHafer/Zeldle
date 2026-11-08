@@ -11,7 +11,55 @@
   font-style: normal;
 }
 
+/* Basically storage for every reused CSS variable (because those exist, apparently).
+   When/if themes are introduced, I can foresee this getting long & messy... */
 :root {
+
+  /* OoT theming is based on the save file select screen of the N64 original. */
+  --oot_container-gradient: 
+          linear-gradient(
+            310deg,
+            #30316100 0%,
+            #6263D24D 10%,
+            #30336380 45%,
+            #3B397FB3 60%,
+            #4E4CABE0 70%,
+            #2B2A62F2 100%
+          );
+
+  --oot_container-bevel: 
+                  polygon(
+                    14px 0, 
+                    100% 0, 
+                    100% 100%, 
+                    14px 100%,
+                    0 calc(100% - 14px), 
+                    0 14px
+                  );
+  
+  /* Again, a rough approximation. Because apparently CSS doesn't just let you apply a gradient to a border edge -_- */
+  --oot_container-border-gradient: 
+          linear-gradient(
+          290deg,
+          #20234100 0%,
+          #20234199 30%,
+          #202341CC 55%,
+          #3f4087CC 80%,
+          #5F60CCCC 100%
+          );
+
+  --oot_cell-gradient:
+        linear-gradient(
+          270deg,
+          #3F3E86 0%,
+          #4953AC 50%,
+          #2E2E5F 100%
+        );
+  
+  --oot_cell-border-top: 3px solid #5F60CC;
+  --oot_cell-border-right: 3px solid #202341;
+  --oot_cell-border-bottom: 3px solid #202341;
+  --oot_cell-border-left: 3px solid #5F60CC;   
 }
 
 p, 
