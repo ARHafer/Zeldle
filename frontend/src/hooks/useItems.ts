@@ -6,15 +6,15 @@ import type { Item } from "../types/Item";
 export default function useItems() {
 
     const [items, setItems] = useState<Item[]>(loadCachedItems);
-    const [isItemListLoading, setIsLoading] = useState(true);
+    const [isItemListLoadedFromServer, setIsLoaded] = useState(false);
 
     useEffect(() => {
             getItems().then(items => {
                 setItems(items);
                 cacheItems(items);
-                setIsLoading(false);
+                setIsLoaded(true);
             })
         }, []);
 
-    return { items, isItemListLoading }
+    return { items, isItemListLoadedFromServer }
 }

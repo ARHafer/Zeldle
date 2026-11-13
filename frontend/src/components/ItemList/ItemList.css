@@ -1,11 +1,42 @@
-.item-list-container {
+/* TODO:
+ * Fix scaling and borders
+ * Add animations when hovered / highlighted (fade from normal gradient to hover gradient)
+ */
+
+.item-list-wrapper {
     position: fixed;
+
+    display: flex;
+    flex-direction: column;
+
+    min-height: 150px;
+    width: min(96vw, 1200px);
+
+    background: var(--oot_container-gradient);
+    
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-image: var(--oot_container-border-gradient) 1;
+
+    margin-inline: auto;
+    margin-block: auto;
 
     left: 18px;
     right: 18px;
-    bottom: 55px;
+    bottom: 5%;
+
+    align-items: center;
+
+    background-clip: padding-box;
+
+    clip-path: var(--oot_container-bevel);
+}
+
+.item-list-container {
+    position: static;
 
     height: 115px;
+    width: min(96vw, 1200px);
 
     padding-top: 14px;
     padding-right: 14px;
@@ -14,18 +45,10 @@
 
     display: flex;
     flex-direction: column;
-
-    background: var(--oot_container-gradient);
-
-    border-style: solid;
-    border-width: 5px 0 5px 5px;
-    border-image: var(--oot_container-border-gradient) 1;
-
-    background-clip: padding-box;
 }
 
 .item-list {
-    position: relative;
+    position: static;
 
     flex: 1;
 
@@ -64,7 +87,8 @@
 .item-list-cell {
     position: relative;
 
-    width: 190px;
+    width: auto;
+    min-width: 190px; /* Cells with overflow text revealing their full names when hovered made scrolling feel janky. */
     height: 40px;
 
     flex-shrink: 0;
@@ -105,32 +129,27 @@
 .item-list-cell span {
     position: relative;
 
+    padding-right: 5px;
+
     overflow: hidden;
 
     white-space: nowrap;
-    text-overflow: ellipsis;
+    text-overflow: '...';
 }
 
-.item-list-cell:hover:not(:disabled) {
-    background:
-        linear-gradient(
-        270deg,
-            #52659D 0%,
-            #70A0CE 50%,
-            #404A7B 100%
-        );
+.item-list:not(.keyboard-mode) .item-list-cell:hover:not(:disabled),
+.item-list li.highlighted .item-list-cell:not(:disabled) {
+    background: var(--oot_cell-hover-gradient);
 
-    box-shadow:
-        0 0 6px rgba(136, 191, 236, 0.9),
-        0 0 15px rgba(136, 191, 236, 0.6);
+    box-shadow: var(--oot_cell-hover-shadow);
 
-    color: #23485C;
+    color: var(--oot_cell-hover-text-color);
     text-overflow: none;
 
-    border-top: 3px solid #86B8E4;
-    border-right: 3px solid #4C6E8A;
-    border-bottom: 3px solid #4C6E8A;
-    border-left: 3px solid #86B8E4;
+    border-top: var(--oot_cell-hover-border-top);
+    border-right: var(--oot_cell-hover-border-right);
+    border-bottom: var(--oot_cell-hover-border-bottom);
+    border-left: var(--oot_cell-hover-border-left);
 
     padding-right: 5px;
 
@@ -138,66 +157,72 @@
     width: max-content;
 }
 
-.item-list-cell:disabled {
+.item-list li.highlighted .item-list-cell:disabled {
+    box-shadow:
+        0 0 6px #202341D5,
+        0 0 15px #20234189;
+}
+
+.item-list-cell:disabled, 
+.item-list-searchbar:disabled,
+.item-list-scroll-button:disabled {
     opacity: 0.5;
 
     cursor: default;
 }
 
-/* Searchbar */
+/* Just for the error messages. If it's gonna break, let it break in style! :p */
+.item-list-error-text {
+    width: 100%;
+
+    margin: 0;
+
+    align-self: center;
+
+    color: white;
+    -webkit-text-stroke: 3px black;
+    paint-order: stroke fill;
+
+    text-align: center;
+}
+
+/* Navigation (Searchbar & Scroll Buttons) */
+
+.item-list-navigation {
+    display: flex;
+
+    justify-content: center;
+
+    width: 100%;
+
+    gap: 50px;
+
+    box-sizing: border-box;
+
+    padding: 0 14px 8px;
+    flex-shrink: 0;
+
+    align-items: center;
+}
 
 .item-list-searchbar-container {
-    position: absolute;
+    display: flex;
+    flex: 1 1 0;
 
-    left: 30px;
-    bottom: -40px;
-
-    width: 360px;
+    width: auto;
+    max-width: 360px;
 
     height: 40px;
 
-    padding-top: 5px;
     padding-right: 5px;
-    padding-bottom: 5px;
     padding-left: 5px;
-
-    display: flex;
 
     background: var(--oot_cell-gradient);
 
-    border-top: 5px ridge #5152A7;
-    border-right: 3px solid #202341;
-    border-bottom: 3px solid #202341;
-    border-left: 3px solid #5F60CC; 
-
-    /* Trying to make the "connector hook" thingy from the OoT save file select. */
-    clip-path:
-        polygon(
-            10px 0,
-            calc(100% - 10px) 0,
-            100% 10px,
-            100% 100%,
-            0 100%,
-            0 10px
-        );
-}
-
-.item-list-searchbar-container::before {
-    content: "";
-
-    position: absolute;
-
-    left: 50%;
-    top: -7px;
-
-    transform: translateX(-50%);
-
-    width: 72%;
-    height: 7px;
-
-    background:#202341;
-
-    z-index: -1;
+    border-top: var(--oot_cell-border-top);
+    border-right: var(--oot_cell-border-right);
+    border-bottom: var(--oot_cell-border-bottom);
+    border-left: var(--oot_cell-border-left);
 }
 
 .item-list-searchbar {
@@ -208,6 +233,7 @@
     background: var(--oot_cell-gradient);
 
     color: white;
+    text-align: center;
 
     border: none;
     outline: none;
@@ -220,44 +246,49 @@
     color: rgba(255, 255, 255, 0.5);
 }
 
-.item-list-searchbar:focus,
-.item-list-searchbar-container:hover .item-list-searchbar {
-    background:
-        linear-gradient(
-        270deg,
-            #52659D 0%,
-            #70A0CE 50%,
-            #404A7B 100%
-        );
+.item-list-searchbar-container:hover .item-list-searchbar:not(:disabled)::placeholder,
+.item-list-searchbar:not(:disabled):focus::placeholder {
+    color: #23485C80
+}
 
-    color: white;
+.item-list-searchbar:focus,
+.item-list-searchbar-container:not(.no-hover):hover .item-list-searchbar {
+    background: var(--oot_cell-hover-gradient);
+
+    color: var(--oot_cell-hover-text-color);
 }
 
 .item-list-searchbar-container:focus-within,
-.item-list-searchbar-container:hover {
-    background:
-        linear-gradient(
-        270deg,
-            #52659D 0%,
-            #70A0CE 50%,
-            #404A7B 100%
-        );
+.item-list-searchbar-container:not(.no-hover):hover, 
+.item-list-scroll-button:hover:not(:disabled) {
+    background: var(--oot_cell-hover-gradient);
 
-    border-top: 5px ridge #86B8E4;
-    border-right: 3px solid #4C6E8A;
-    border-bottom: 3px solid #4C6E8A;
-    border-left: 3px solid #86B8E4;
+    box-shadow: var(--oot_cell-hover-shadow);
+
+    border-top: var(--oot_cell-hover-border-top);
+    border-right: var(--oot_cell-hover-border-right);
+    border-bottom: var(--oot_cell-hover-border-bottom);
+    border-left: var(--oot_cell-hover-border-left);
+
+    color: var(--oot_cell-hover-text-color);
 }
 
-/* Just for the error messages. If it's gonna break, let it break in style! :p */
-.item-list > p {
-    width: 100%;
+.item-list-scroll-button {
+    position: static;
 
-    margin: 0;
+    width: 80px;
+    height: 40px;
 
-    align-self: center;
+    background: var(--oot_cell-gradient);
+
+    border-top: var(--oot_cell-border-top);
+    border-right: var(--oot_cell-border-right);
+    border-bottom: var(--oot_cell-border-bottom);
+    border-left: var(--oot_cell-border-left);
 
     color: white;
+    font: inherit;
+    font: large;
 
-    text-align: center;
+    cursor: pointer;
 }

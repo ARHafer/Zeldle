@@ -7,13 +7,15 @@ import useGame from '../hooks/useGame'
 import './GamePage.css';
 
 /* 
- * Add scroll buttons for ItemList. 
+ * (The ever growing) TODO: 
+ * Fix CSS scaling and border issues in both components (ugh...).
+ * Improve error handling.
  * Add pop-ups for game win / loss.
  * Add health meter.
  * Add contact / bug-reporting functionality.
- * Beta styling & sound effects for rest of site.
  * Finish FeedbackGrid styling (game release arrows & animations).
- * Fix incorrect guess ordering.
+ * Beta styling & sound effects for rest of site.
+ * Fix guess ordering.
  * Final debugging and code clean-up.
  * Redesign mobile UI.
  * Final revision for beta styling.
@@ -22,7 +24,7 @@ import './GamePage.css';
 
 function GamePage() {
 
-  const { items, isItemListLoading } = useItems();
+  const { items, isItemListLoadedFromServer } = useItems();
   const { guessItem, isGuessLoading } = useGuess();
   const { updateGameCache, game, isGameLoading } = useGame();
 
@@ -41,7 +43,7 @@ function GamePage() {
   return (
   <main className='game-page'>
 
-    <ItemList items={items} guessedIds={game?.guessedIds ?? []} isLoading={isGuessLoading || isItemListLoading} onCellClick={handleCellClick}/>
+    <ItemList items={items} guessedIds={game?.guessedIds ?? []} isGuessLoading={isGuessLoading} isLoadedFromServer={isItemListLoadedFromServer} onCellClick={handleCellClick}/>
     <FeedbackGrid guessHistory={game?.guessHistory ?? []}/>
 
   </main>

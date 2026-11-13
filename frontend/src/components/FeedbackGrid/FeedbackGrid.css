@@ -1,7 +1,7 @@
 .feedback-grid-container {
     position: relative;
 
-    top: -9vh;
+    top: round(-9vh, 1px); /* I hate CSS so much. Subpixels? Really? */
 
     width: min(96vw, 1200px);
 

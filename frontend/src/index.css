@@ -28,18 +28,18 @@
           );
 
   --oot_container-bevel: 
-                  polygon(
-                    14px 0, 
-                    100% 0, 
-                    100% 100%, 
-                    14px 100%,
-                    0 calc(100% - 14px), 
-                    0 14px
-                  );
+          polygon(
+            14px 0, 
+            100% 0, 
+            100% 100%, 
+            14px 100%,
+            0 calc(100% - 14px), 
+            0 14px
+          );
   
   /* Again, a rough approximation. Because apparently CSS doesn't just let you apply a gradient to a border edge -_- */
   --oot_container-border-gradient: 
-          linear-gradient(
+        linear-gradient(
           290deg,
           #20234100 0%,
           #20234199 30%,
@@ -59,7 +59,26 @@
   --oot_cell-border-top: 3px solid #5F60CC;
   --oot_cell-border-right: 3px solid #202341;
   --oot_cell-border-bottom: 3px solid #202341;
-  --oot_cell-border-left: 3px solid #5F60CC;   
+  --oot_cell-border-left: 3px solid #5F60CC; 
+
+  --oot_cell-hover-gradient:
+        linear-gradient(
+          270deg,
+          #52659D 0%,
+          #70A0CE 50%,
+          #404A7B 100%
+        );
+
+  --oot_cell-hover-border-top: 3px solid #86B8E4;
+  --oot_cell-hover-border-right: 3px solid #4C6E8A;
+  --oot_cell-hover-border-bottom: 3px solid #4C6E8A;
+  --oot_cell-hover-border-left: 3px solid #86B8E4;
+
+  --oot_cell-hover-shadow:
+        0 0 6px #86B8E4D5,
+        0 0 15px #86B8E489;
+  
+  --oot_cell-hover-text-color: #23485C;
 }
 
 p, 
