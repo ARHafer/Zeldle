@@ -1,4 +1,4 @@
-import { getItemImage, getPropertyImage } from '../../util/Images';
+import { getPropertyImage } from '../../util/Images';
 import type { Result } from "../../types/Results";
 import type { Feedback } from "../../types/Feedback"; 
 
@@ -32,7 +32,7 @@ export default function FeedbackGridRow(props: { feedback: (Feedback | null) }) 
     return (
         <tr>
             <td className={getResultStyle(results.name)}>
-                <img src={getItemImage(properties.id)}/>
+                <img src={`/item_images/${properties.id}.png`}/>
                 <span>{properties.name}</span>
             </td>
 
@@ -81,6 +81,7 @@ function getResultStyle(result: Result): string {
         return 'feedback-grid-cell incorrect';
     }
 }
+
 function getReleaseOrderArrow(result: Result): string {
     if (result === 'TARGET_HIGHER') {
         return '🠕';

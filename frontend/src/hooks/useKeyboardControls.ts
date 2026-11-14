@@ -1,7 +1,6 @@
 import { useEffect, useState, type RefObject } from "react";
 
-// Figured I'd make it generic, since the type of array changes nothing.
-export function useKeyboardControls(listElements: Object[], listRef: RefObject<HTMLUListElement | null>, searchbarRef: RefObject<HTMLInputElement | null>) {
+export function useKeyboardControls(listLength: number, listRef: RefObject<HTMLUListElement | null>, searchbarRef: RefObject<HTMLInputElement | null>) {
 
     const [highlightedIndex, setHighlightedIndex] = useState(0);
 
@@ -14,17 +13,15 @@ export function useKeyboardControls(listElements: Object[], listRef: RefObject<H
                 if (event.key === 'ArrowUp' || event.key === 'ArrowRight' || event.key === 'ArrowLeft'  || event.key === 'Enter') {
                     event.preventDefault();
                     searchbarRef.current?.blur();
-                    setHighlightedIndex(0);
-                } else {
-                    return;
-                }
-        
+                } 
+                
+                return;
             }
         
             switch (event.key) {
                 case 'ArrowRight':
                     event.preventDefault();
-                    setHighlightedIndex(idx => Math.max(0, Math.min(idx + 1, listElements.length - 1)));
+                    setHighlightedIndex(idx => Math.max(0, Math.min(idx + 1, listLength - 1)));
                     break;
                         
                 case 'ArrowLeft':
@@ -56,7 +53,7 @@ export function useKeyboardControls(listElements: Object[], listRef: RefObject<H
 
         window.addEventListener('keydown', navigateList);
         return () => window.removeEventListener('keydown', navigateList);
-    }, [listElements, highlightedIndex]);
+    }, [listLength, highlightedIndex]);
 
     return { highlightedIndex, setHighlightedIndex }
 }

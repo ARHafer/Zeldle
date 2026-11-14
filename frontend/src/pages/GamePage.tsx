@@ -3,6 +3,7 @@ import FeedbackGrid from '../components/FeedbackGrid/FeedbackGrid';
 import useItems from '../hooks/useItems';
 import useGuess from '../hooks/useGuess'
 import useGame from '../hooks/useGame'
+import { usePreloadItemImages } from '../hooks/usePreloadImages.ts';
 
 import './GamePage.css';
 
@@ -27,6 +28,8 @@ function GamePage() {
   const { items, isItemListLoadedFromServer } = useItems();
   const { guessItem, isGuessLoading } = useGuess();
   const { updateGameCache, game, isGameLoading } = useGame();
+
+  usePreloadItemImages(items);
 
   async function handleCellClick(itemId: number): Promise<void> {
     if (isGameLoading || game == null || game.guessedIds.includes(itemId)) {

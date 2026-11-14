@@ -1,9 +1,9 @@
-import { getItemImage } from '../../util/Images';
+import { memo } from 'react';
 import type { Item } from '../../types/Item';
 
 import './ItemList.css';
 
-export default function ItemListCell(props: { item: Item; guessedIds: number[]; isGuessLoading: boolean; isLoadedFromServer: boolean; onCellClick: (itemId: number) => void }) {
+function ItemListCell(props: { item: Item; guessedIds: number[]; isGuessLoading: boolean; isLoadedFromServer: boolean; onCellClick: (itemId: number) => void }) {
 
     const isGuessed: boolean = props.guessedIds.includes(props.item.id);
 
@@ -12,9 +12,15 @@ export default function ItemListCell(props: { item: Item; guessedIds: number[]; 
         onClick={() => props.onCellClick(props.item.id)}
         disabled={props.isGuessLoading || !props.isLoadedFromServer || isGuessed}>
 
-            <img src={getItemImage(props.item.id)}/>
+            <img src={`/item_images/${props.item.id}.png`}
+            alt={props.item.name}
+            loading='eager'
+            decoding='async'/>
+
             <span>{props.item.name}</span>
 
         </button>
     )
 }
+
+export default memo(ItemListCell) // Another small optimization. Every single cell doesn't need to re-render every time the list does (which is admittedly a lot).
