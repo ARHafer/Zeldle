@@ -1,3 +1,7 @@
+/* TODO:
+ * Redo gradients. The more I work on this the less accurate they look :(
+ */
+
 *,
 *::before,
 *::after {
@@ -27,13 +31,38 @@
             #2B2A62F2 100%
           );
 
-  --oot_container-bevel: 
+  --oot_container-interior-bevel: 
           polygon(
+            10.5px 0, 
+            100% 0, 
+            100% 100%, 
+            10.5px 100%,
+            0 calc(100% - 10.5px), 
+            0 10.5px,
+            10.5px 0
+          );
+
+  --oot_container-exterior-bevel: 
+          polygon(
+            evenodd, /* Only draws over spots drawn over once, that way the inside can keep its gradient. CSS is pretty cool sometimes. */
+
+            /* Outer */
             14px 0, 
             100% 0, 
             100% 100%, 
             14px 100%,
             0 calc(100% - 14px), 
+            0 14px,
+            14px 0, 
+            
+            /* Inner */ 
+            16px 5px,
+            100% 5px, 
+            100% calc(100% - 5px),
+            16px calc(100% - 5px), 
+            5px calc(100% - 16px),
+            5px 16px, 16px 5px,
+            14px 0,
             0 14px
           );
   

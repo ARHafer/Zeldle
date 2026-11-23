@@ -1,32 +1,58 @@
-.feedback-grid-container {
+.feedback-grid-wrapper {
     position: relative;
-
-    top: round(-9vh, 1px); /* I hate CSS so much. Subpixels? Really? */
 
     width: min(96vw, 1200px);
 
-    overflow-x: scroll;
-    scroll-behavior: smooth;
-    scrollbar-width: none;
+    margin-top: 3vh;
 
-    margin-block: auto;
-    margin-inline: auto;
+    padding: 17px 12px 17px 17px;
 
-    padding: 1vw;
+    background: none;
+    border: none;
+
+    isolation: isolate;
+
+    overflow-x: auto;
+
+    clip-path: none;
+}
+
+.feedback-grid-wrapper::before { /* Content */
+    content: "";
+    position: absolute;
+
+    inset: 5px 0 5px 5px;
 
     background: var(--oot_container-gradient);
+    
+    clip-path: var(--oot_container-interior-bevel);
 
-    border-style: solid;
-    border-width: 5px 0 5px 5px;
-    border-image: var(--oot_container-border-gradient) 1;
+    z-index: -1;
+} .feedback-grid-wrapper::after { /* Border */
+    content: "";
+    position: absolute;
 
-    background-clip: padding-box;
+    pointer-events: none;
 
-    clip-path: var(--oot_container-bevel);
+    inset: 0;
+
+    background: var(--oot_container-border-gradient);
+
+    clip-path: var(--oot_container-exterior-bevel);
+
+    z-index: -1;
+}
+
+.feedback-grid-container {
+    width: 100%;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
 }
 
 .feedback-grid {
-    width: 100%;
+    width: max(100%, 1150px);
 
     table-layout: fixed;
 
@@ -34,12 +60,13 @@
     border-spacing: clamp(3px, 0.55vw, 6px);
 
     text-align: center;
-    font-size: clamp(0.7rem, 2vw, 1rem);
+    font-size: 1rem;
     
     padding-left: 0.7%;
 
     border-top: 3px solid #122143;
     border-left: 3px solid #122143;
+    border-spacing: 6px;
 
     opacity: 100%;
 }
@@ -48,6 +75,7 @@
 
 .feedback-grid-header {
     vertical-align: bottom;
+
     color: white;
     -webkit-text-stroke: 3px black;
     paint-order: stroke fill;
@@ -60,10 +88,8 @@
 .feedback-grid-cell {
     position: relative;
 
-    width: 140px;
+    min-width: 140px;
     height: 81px;
-    
-    box-sizing: border-box;
 
     background: var(--oot_cell-gradient);
 
@@ -79,7 +105,6 @@
     text-align: center;
 
     overflow: hidden;
-    overflow-wrap: anywhere;
     hyphens: auto;
 }
 
@@ -126,25 +151,4 @@
     border-right: 3px solid #412020;
     border-bottom: 3px solid #412020;
     border-left: 3px solid #cc5f5f;
-}
-
-@media (max-width: 1182px) {
-
-    /* Gets rid of cell text and increases image size when screen gets too small. */
-    .feedback-grid-cell span {
-        display: none;
-    }
-
-    .feedback-grid-cell img {
-        width: 60%;
-    }
-
-    /* Replaces headers with a shorter name when screen gets too small. */
-    .full-name {
-        display: none;
-    }
-
-    .short-name {
-        display: inline;
-    }
 }

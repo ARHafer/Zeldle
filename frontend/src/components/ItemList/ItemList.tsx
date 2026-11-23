@@ -38,7 +38,6 @@ export default function ItemList(props: { items: Item[]; guessedIds: number[]; i
         if (!list) return;
 
         function updateScrollBoundaries(): void {
-            const list = listRef.current;
             if (!list) return;
 
             const distanceFromStart = list.scrollLeft;
@@ -56,7 +55,7 @@ export default function ItemList(props: { items: Item[]; guessedIds: number[]; i
 
         return() => { 
             list.removeEventListener('scroll', updateScrollBoundaries);
-            observer.disconnect
+            observer.disconnect();
         }
     }, [filteredItems.length]);
 
@@ -94,21 +93,8 @@ export default function ItemList(props: { items: Item[]; guessedIds: number[]; i
 
 
     // Display List //
-    type ListStatus = 'READY' | 'LOADING_FULL' | 'LOADING_EMPTY' | 'ERROR'
-
     const isListEmpty: boolean = props.items.length === 0;
-
-    const listStatus: ListStatus = 
-        !props.isLoadedFromServer && isListEmpty ? 'LOADING_EMPTY' // If game isn't loaded and cache is empty, display loading message.
-        : !props.isLoadedFromServer && !isListEmpty ? 'LOADING_FULL' // If game isn't loaded but cache is populated, display list with disabled searchbar, cells, & no hover animations.
-        : props.isLoadedFromServer && isListEmpty ? 'ERROR' // If the list is loaded from the server but no items are found, give an error message.
-        : 'READY';
-
-    const searchbarPlaceholder: string =
-        listStatus === 'READY' ? 'Search item list...'
-        : listStatus === 'LOADING_FULL' || listStatus === 'LOADING_EMPTY' ? 'Loading, please wait...'
-        : 'An error occurred!';
-
+    const listStatus = getListStatus(isListEmpty, props.isLoadedFromServer);
     const searchDisabled: boolean = listStatus !== 'READY';
     const showErrorMessage: boolean = listStatus === 'LOADING_EMPTY' || listStatus === 'ERROR';
 
@@ -124,7 +110,7 @@ export default function ItemList(props: { items: Item[]; guessedIds: number[]; i
 
                     <li className='item-list-error-text'>
                         {listStatus === 'LOADING_EMPTY' ? 'Now loading, if this is taking a while, please refresh the page or try again later.'
-                        : "An error occured, and the item list couldn't be loading. Please try again later."}
+                        : "An error occurred, and the item list couldn't be loaded. Please try again later."}
                     </li>
 
                     ) : (
@@ -151,7 +137,7 @@ export default function ItemList(props: { items: Item[]; guessedIds: number[]; i
                         <input className='item-list-searchbar'
                         ref={searchbarRef}
                         type='text'
-                        placeholder={searchbarPlaceholder}
+                        placeholder={getSearchbarPlaceholder(listStatus)}
                         value={search}
                         disabled={searchDisabled}
                         onChange={(event) => setSearch(event.target.value)}
@@ -168,4 +154,19 @@ export default function ItemList(props: { items: Item[]; guessedIds: number[]; i
 
         </div>
     )
+}
+
+type ListStatus = 'READY' | 'LOADING_FULL' | 'LOADING_EMPTY' | 'ERROR'
+
+function getListStatus(listEmpty: boolean, loadedFromServer: boolean): ListStatus {
+    if (listEmpty && !loadedFromServer) return 'LOADING_EMPTY'; // If game isn't loaded and cache is empty, display loading message.
+    if (!listEmpty && !loadedFromServer) return 'LOADING_FULL'; // If game isn't loaded but cache is populated, display list with disabled searchbar, cells, & no hover animations.
+    if (listEmpty && loadedFromServer) return 'ERROR'; // If the list is loaded from the server but no items are found, give an error message.
+    else return 'READY';
+}
+
+function getSearchbarPlaceholder(status: ListStatus): string {
+    if (status === 'LOADING_EMPTY' || status === 'LOADING_FULL') return 'Loading, please wait...';
+    if (status === 'ERROR') return 'An error occurred!';
+    else return 'Search item list...';
 }

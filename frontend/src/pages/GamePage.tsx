@@ -8,8 +8,9 @@ import { usePreloadItemImages } from '../hooks/usePreloadImages.ts';
 import './GamePage.css';
 
 /* 
- * (The ever growing) TODO: 
- * Fix CSS scaling and border issues in both components (ugh...).
+ * (The [still] ever growing) TODO: 
+ * ADD FRONTEND DESIGN AND FEATURES TO THE PLANNING DOC SO I DON'T KEEP UPDATING THIS AS I THINK OF THINGS ;-;
+ * Make feedback grid rows appear as user guesses.
  * Improve error handling.
  * Add pop-ups for game win / loss.
  * Add health meter.
@@ -46,8 +47,8 @@ function GamePage() {
   return (
   <main className='game-page'>
 
-    <ItemList items={items} guessedIds={game?.guessedIds ?? []} isGuessLoading={isGuessLoading} isLoadedFromServer={isItemListLoadedFromServer} onCellClick={handleCellClick}/>
     <FeedbackGrid guessHistory={game?.guessHistory ?? []}/>
+    <ItemList items={items} guessedIds={game?.guessedIds ?? []} isGuessLoading={isGuessLoading} isLoadedFromServer={isItemListLoadedFromServer} onCellClick={handleCellClick}/>
 
   </main>
   )

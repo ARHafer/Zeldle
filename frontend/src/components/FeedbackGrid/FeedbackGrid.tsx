@@ -8,55 +8,37 @@ export default function FeedbackGrid(props: { guessHistory: (Feedback | null)[] 
     const rows = Array.from({ length: 6 }, (_, i) => props.guessHistory[i] ?? null);
 
     return(
-        <div className='feedback-grid-container'>
-            <table className='feedback-grid'>
-                <thead>
-                    <tr>
-                        <th className='feedback-grid-header'>
-                            <span>Item</span>
-                        </th>
+        <div className='feedback-grid-wrapper'>
 
-                        <th className='feedback-grid-header'>
-                            <span>Game</span>
-                        </th>
+            <div className='feedback-grid-container'>
 
-                        <th className='feedback-grid-header'>
-                            <span className='full-name'>Purpose</span>
-                            <span className='short-name'>Use</span>
-                        </th>
+                <table className='feedback-grid'>
 
-                        <th className='feedback-grid-header'>
-                            <span className='full-name'>Consumption</span>
-                            <span className='short-name'>Ammo</span>
-                        </th>
+                    <thead>
 
-                        <th className='feedback-grid-header'>
-                            <span className='full-name'>Acquisition</span>
-                            <span className='short-name'>Get</span>
-                        </th>
+                        <tr>
+                            <th className='feedback-grid-header'> <span>Item</span> </th>
+                            <th className='feedback-grid-header'> <span>Game</span> </th>
+                            <th className='feedback-grid-header'> <span>Purpose</span> </th>
+                            <th className='feedback-grid-header'> <span>Consumption</span> </th>
+                            <th className='feedback-grid-header'> <span>Acquisition</span> </th>
+                            <th className='feedback-grid-header'> <span>Range</span> </th>
+                            <th className='feedback-grid-header'> <span>Combat</span> </th>
+                            <th className='feedback-grid-header'> <span>Control Mode</span> </th>
+                        </tr>
 
-                        <th className='feedback-grid-header'>
-                            <span>Range</span>
-                        </th>
+                    </thead>
 
-                        <th className='feedback-grid-header'>
-                            <span className='full-name'>Enemy Interact</span>
-                            <span className='short-name'>Combat</span>
-                        </th>
+                    <tbody>
+                        {rows.map((feedback, i) => (
+                            <FeedbackGridRow key={i} feedback={feedback}/>
+                        ))}
+                    </tbody>
+                    
+                </table>
 
-                        <th className='feedback-grid-header'>
-                            <span className='full-name'>Control Mode</span>
-                            <span className='short-name'>Ctrl</span>
-                        </th>
-                    </tr>
-                </thead>
+            </div>
 
-                <tbody>
-                    {rows.map((feedback, i) => (
-                        <FeedbackGridRow key={i} feedback={feedback}/>
-                    ))}
-                </tbody>
-            </table>
         </div>
     )
 }

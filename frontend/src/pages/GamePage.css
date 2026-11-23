@@ -1,5 +1,12 @@
 .game-page {
     display: flex;
     flex-direction: column;
+
+    align-items: center;
+
     min-height: 100dvh;
+}
+
+.gamepage > * {
+    flex-shrink: 0;
 }

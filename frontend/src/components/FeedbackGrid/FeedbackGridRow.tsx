@@ -1,4 +1,3 @@
-import { getPropertyImage } from '../../util/Images';
 import type { Result } from "../../types/Results";
 import type { Feedback } from "../../types/Feedback"; 
 
@@ -6,7 +5,6 @@ import './FeedbackGrid.css';
 
 /* TODO: 
  * Add animation for result reveal.
- * Add images for each property.
  * Add arrow assets.
  */
 
@@ -37,37 +35,30 @@ export default function FeedbackGridRow(props: { feedback: (Feedback | null) }) 
             </td>
 
             <td className={getResultStyle(results.game)}>
-                <img src={getPropertyImage(properties.game)}/>
                 <span>{properties.game} {getReleaseOrderArrow(results.gameReleaseDate)}</span>
             </td>
 
             <td className={getResultStyle(results.purpose)}>
-                <img src={getPropertyImage(properties.purpose)}/>
                 <span>{properties.purpose}</span>
             </td>
 
             <td className={getResultStyle(results.consumption)}>
-                <img src={getPropertyImage(properties.consumption)}/>
                 <span>{properties.consumption}</span>
             </td>
 
             <td className={getResultStyle(results.acquisition)}>
-                <img src={getPropertyImage(properties.acquisition)}/>
                 <span>{properties.acquisition}</span>
             </td>
 
             <td className={getResultStyle(results.range)}>
-                <img src={getPropertyImage(properties.range)}/>
                 <span>{properties.range}</span>
             </td>
 
             <td className={getResultStyle(results.enemyInteraction)}>
-                <img src={getPropertyImage(properties.enemyInteraction)}/>
                 <span>{properties.enemyInteraction}</span>
             </td>
 
             <td className={getResultStyle(results.controlMode)}>
-                <img src={getPropertyImage(properties.controlMode)}/>
                 <span>{properties.controlMode}</span>
             </td>
         </tr>
